@@ -9,4 +9,8 @@ module Kiip
   autoload :Syncer, 'kiip/syncer'
   autoload :Config, 'kiip/config'
   autoload :Task, 'kiip/task'
+
+  def self.root
+    File.expand_path(File.join(__dir__, '..'))
+  end
 end

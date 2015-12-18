@@ -2,6 +2,13 @@ module Kiip
   class Config
     attr_reader :tasks
 
+    def self.create_rc
+      sample_path = File.join(Kiip.root, 'kiip.rc.sample.yml')
+      dest_path = File.expand_path('~/.kiip.rc.yml')
+
+      Command.run "cp #{sample_path} #{dest_path}"
+    end
+
     def initialize config_hash
       raise 'config_hash must be a hash' unless config_hash.is_a? Hash
 

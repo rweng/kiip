@@ -11,7 +11,7 @@ Kiip, just another dotfiles tool.
 
 ## Usage
 
-TODO
+    kiip init # creates a sample ~/.kiip.rc.yml
 
 ## Development
 
