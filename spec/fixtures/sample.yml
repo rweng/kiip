@@ -1,0 +1,6 @@
+target: /tmp/kiip-tests
+tasks:
+  fixtures:
+    base: .
+    symlink: true
+
