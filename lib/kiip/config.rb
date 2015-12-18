@@ -4,7 +4,7 @@ module Kiip
 
     def self.create_rc
       sample_path = File.join(Kiip.root, 'kiip.rc.sample.yml')
-      dest_path = File.expand_path('~/.kiip.rc.yml')
+      dest_path = File.expand_path(Kiip::CONFIG)
 
       Command.run "cp #{sample_path} #{dest_path}"
     end

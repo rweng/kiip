@@ -5,6 +5,8 @@ require 'hashie'
 require 'command'
 
 module Kiip
+  CONFIG = '~/.kiip.rc.yml'
+
   autoload :Cli, 'kiip/cli'
   autoload :Syncer, 'kiip/syncer'
   autoload :Config, 'kiip/config'
