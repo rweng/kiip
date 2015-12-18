@@ -19,8 +19,8 @@ describe Kiip::Task, type: :unit do
   describe 'run' do
     context 'when method: symlink and source does not exist' do
       it 'creates a symlink at the target' do
-        expect(subject).to receive(:run).with("mv /tmp/kiip-tests/source /tmp/kiip-tests/target").and_call_original
-        expect(subject).to receive(:run).with("ln -s /tmp/kiip-tests/target /tmp/kiip-tests/source").and_call_original
+        expect(Command).to receive(:run).with("mv /tmp/kiip-tests/source /tmp/kiip-tests/target").and_call_original
+        expect(Command).to receive(:run).with("ln -s /tmp/kiip-tests/target /tmp/kiip-tests/source").and_call_original
 
         subject.exec
 

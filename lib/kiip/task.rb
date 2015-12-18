@@ -15,17 +15,9 @@ module Kiip
       if File.exists?(source)
         raise 'source and target cant both exist' if File.exists?(target)
 
-        run "mv #{source} #{target}"
-        run "ln -s #{target} #{source}"
+        Command.run "mv #{source} #{target}"
+        Command.run "ln -s #{target} #{source}"
       end
-    end
-
-    private
-
-    # on bash
-    def run cmd
-      puts "running: #{cmd}"
-      %x(#{cmd})
     end
   end
 end

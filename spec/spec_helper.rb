@@ -1,7 +1,6 @@
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 
 require 'kiip'
-
 require 'pry'
 
 # require support files
@@ -16,6 +15,6 @@ RSpec.configure do |config|
   config.fail_fast = true
 
   config.before(:each) do
-    allow_any_instance_of(Kiip::Task).to receive(:run) { |obj, cmd| raise "unexpected run: '#{cmd}'" }
+    allow(Command).to receive(:run) { |cmd| raise "unexpected run: '#{cmd}'" }
   end
 end
