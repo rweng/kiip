@@ -15,6 +15,8 @@ module Kiip
       @config.load! if @config.exists?
     end
 
+    # lists all tasks
+    #
     # @return [Array<String>]
     def list
       config.tasks.map do |task_name, task|
@@ -22,6 +24,7 @@ module Kiip
       end
     end
 
+    # remove a task from the castle
     def rm(task_name, remove_source: false, replace_source: false, remove_target: false)
       config.rm task_name
       config.save!
@@ -50,6 +53,7 @@ module Kiip
       config.tasks[name]
     end
 
+    # track a folder or file under the given task name
     def track name, path
       return unless ensure_existance
 
