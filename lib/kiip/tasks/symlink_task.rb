@@ -20,12 +20,25 @@ module Kiip::Tasks
         raise "source is a symlink: #{source}" if File.symlink? source
 
         Command.run "mv #{source} #{target}"
-        Command.run "ln -s #{target} #{source}"
+        create_symlink_from_source_to_target
       else
         raise "source must exist: #{source}"
       end
+    end
 
+    # recreates the symlink if it does not exist
+    def sync!
+      return create_symlink_from_source_to_target if not File.exists? source
 
+      # return if its already the correct link
+      return if File.symlink? source and File.readlink(source) == target
+
+      raise 'source does already exist'
+    end
+
+    private
+    def create_symlink_from_source_to_target
+      FileUtils.symlink(source, target)
     end
   end
 end

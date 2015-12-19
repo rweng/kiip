@@ -5,6 +5,11 @@ module Kiip
       Kiip::Castle.get_instance.track(name, file_or_folder)
     end
 
+    desc 'sync NAME', 'recreates the source of the package (via symlink, copy, etc)'
+    def sync name
+      Kiip::Castle.get_instance.sync!(name)
+    end
+
     desc 'list', 'lists all packages'
     def list
       Kiip::Castle.get_instance.list.each {|line| puts line}

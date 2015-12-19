@@ -28,33 +28,36 @@ module Kiip
       File.join(path, 'home', package.name)
     end
 
+    def sync! package_name
+      get_package!(package_name).task.sync!
+    end
+
     # remove a task from the castle
     def rm(task_name, remove_source: false, replace_source: false, remove_target: false)
       config.rm task_name
       config.save!
 
-      task =get_package(task_name)
-      raise ArgumentError.new("task #{task_name} not found") unless task
+      package = get_package!(task_name)
 
       if remove_source or remove_source
-        File.rm task.source
+        File.rm package.source
       end
 
       if replace_source
         if remove_target
-          FileUtils.mv task.target, task.source
+          FileUtils.mv package.target, package.source
         else
-          FileUtils.cp_r task.target, task.source
+          FileUtils.cp_r package.target, package.source
         end
       end
 
       if remove_target and not remove_source
-        File.rm task.target
+        File.rm package.target
       end
     end
 
-    def get_package name
-      config.packages[name]
+    def get_package! name
+      config.packages[name] || (raise ArgumentError.new("package #{name} not found"))
     end
 
     # track a folder or file under the given task name

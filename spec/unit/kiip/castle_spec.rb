@@ -13,6 +13,14 @@ describe Kiip::Castle do
     end
   end
 
+  describe '#sync!' do
+    it 'calls #sync on the packages task' do
+      instance.config.packages[sample_package.name] = sample_package
+      expect(sample_package.task).to receive(:sync!)
+      instance.sync! sample_package.name
+    end
+  end
+
   describe '#rm' do
     before do
       instance.config.packages['ssh'] = sample_package

@@ -18,10 +18,11 @@ Kiip, just another dotfiles tool to move your actual files and folders to a repo
 ## Usage
 
     Commands:
-      kiip help [COMMAND]   # Describe available commands or one specific command
-      kiip list             # lists all tasks
-      kiip rm NAME          # removes task with name NAME, see: kiip help rm
-      kiip track NAME PATH  # tracks the file or folder under PATH with the name NAME
+        kiip help [COMMAND]   # Describe available commands or one specific command
+        kiip list             # lists all packages
+        kiip rm NAME          # removes package with name NAME, see: kiip help rm
+        kiip sync NAME        # recreates the source of the package (via symlink, copy, etc)
+        kiip track NAME PATH  # tracks the file or folder under PATH with the package name NAME
 
 ## Development
 
