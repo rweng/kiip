@@ -9,5 +9,10 @@ module Kiip
     def track name, file_or_folder
       Kiip::Castle.get_instance.track(name, file_or_folder)
     end
+
+    desc 'list', 'lists all tasks'
+    def list
+      Kiip::Castle.get_instance.list.each {|line| puts line}
+    end
   end
 end

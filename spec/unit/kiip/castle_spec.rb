@@ -3,8 +3,9 @@ require 'spec_helper'
 describe Kiip::Castle do
   let(:castle_path) { '/castle_path' }
   let(:instance) { described_class.new(castle_path) }
+  let(:sample_task){ Kiip::Task.new(name: 'ssh', source: '~/.ssh', target: '/castle/home/ssh') }
 
-  describe 'run' do
+  describe '.run' do
     it 'calls exec on the task' do
       task = double(:task)
       expect(task).to receive(:exec!)
@@ -13,7 +14,14 @@ describe Kiip::Castle do
     end
   end
 
-  describe 'track' do
+  describe '.list' do
+    it 'returns string of all tasks in the castle config to the output' do
+      instance.config.tasks['ssh'] = sample_task
+      expect(instance.list).to eq(['ssh: ~/.ssh -> /castle/home/ssh'])
+    end
+  end
+
+  describe '.track' do
     let(:track_name) { 'ssh' }
     let(:track_path) { '~/.ssh' }
     subject { instance.track track_name, track_path }

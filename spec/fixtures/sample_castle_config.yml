@@ -1,0 +1,3 @@
+tasks:
+  ssh:
+    source: ~/.ssh

@@ -4,11 +4,22 @@ require 'active_support/core_ext/hash/keys'
 module Kiip
   class Castle
     class Config
-      attr_reader :config, :castle, :tasks
+      attr_reader :castle, :tasks
 
       def initialize castle
         @castle = castle
         @tasks = {}
+      end
+
+      # loads configuration from config file
+      def load!
+        content = YAML::load_file(path)
+        @tasks = content['tasks'].inject({}) do |result, k|
+          task_name, task_def = k
+
+          result[task_name] = Kiip::Task.new(name: task_name, source: task_def['source'], target: task_def['target'] || File.join(castle.path, task_name))
+          result
+        end
       end
 
       def path
@@ -24,7 +35,7 @@ module Kiip
       end
 
       def file_content
-        tasks_hash = @tasks.inject({}) do |result, ary|
+        tasks_hash = tasks.inject({}) do |result, ary|
           task_name = ary.first
           task = ary.last.to_h
           task.delete :name

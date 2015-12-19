@@ -14,6 +14,7 @@ Kiip, just another dotfiles tool.
     kiip help
     kiip init # creates a sample ~/.kiip.rc.yml
     kiip track ssh ~/.ssh
+    kiip list
 
 ## Development
 

@@ -12,6 +12,14 @@ module Kiip
     def initialize castle_path
       @path = castle_path
       @config = Kiip::Castle::Config.new(self)
+      @config.load! if @config.exists?
+    end
+
+    # @return [Array<String>]
+    def list
+      config.tasks.map do |task_name, task|
+        "#{task.name}: #{task.source} -> #{task.target}"
+      end
     end
 
     def track name, path
