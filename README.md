@@ -13,9 +13,8 @@ Kiip, just another dotfiles tool.
 
     Commands:
       kiip help [COMMAND]   # Describe available commands or one specific command
-      kiip init             # creates a sample ~/.kiip.rc.yml
       kiip list             # lists all tasks
-      kiip rm NAME          # removes task with name NAME
+      kiip rm NAME          # removes task with name NAME, see: kiip help rm
       kiip track NAME PATH  # tracks the file or folder under PATH with the name NAME
 
 ## Development
