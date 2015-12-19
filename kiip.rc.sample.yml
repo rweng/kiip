@@ -1,6 +1,2 @@
-castle: ~/Dropbox/kiip
-tasks:
-  fixtures:
-    base: .
-    symlink: true
-
+castles:
+  me: ~/Dropbox/kiip
