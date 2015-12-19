@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Kiip::Castle do
   let(:castle_path) { '/castle_path' }
   let(:instance) { described_class.new(castle_path) }
-  let(:sample_task){ Kiip::Task.new(name: 'ssh', source: '~/.ssh', target: '/castle/home/ssh') }
+  let(:sample_task) { Kiip::Task.new(name: 'ssh', source: '~/.ssh', target: '/castle/home/ssh') }
 
   describe '.run' do
     it 'calls exec on the task' do
@@ -29,6 +29,7 @@ describe Kiip::Castle do
     before do
       allow(instance).to receive(:create!)
       allow(instance.config).to receive(:save!)
+      allow(instance).to receive(:run)
     end
 
     shared_examples 'it tracks' do
@@ -39,8 +40,8 @@ describe Kiip::Castle do
       end
 
       it 'executes the task' do
-        expect(instance).to receive(:run).with('ssh')
         subject
+        expect(instance).to have_received(:run).with('ssh')
       end
     end
 

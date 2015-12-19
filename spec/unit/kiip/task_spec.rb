@@ -2,30 +2,52 @@ require 'spec_helper'
 
 describe Kiip::Task, type: :unit do
 
-  let(:source){ '/tmp/kiip-tests/source' }
-  let(:target){ '/tmp/kiip-tests/target' }
-  subject { described_class.new(
+  let(:source){ '~/.ssh' }
+  let(:target){ '~/Drobox/kiip/home/ssh' }
+
+  let(:instance) { described_class.new(
       name: 'def_name',
       source: source,
       target: target,
   ) }
 
-  before do
-    `rm -rf /tmp/kiip-tests`
-    `mkdir -p #{source}`
-    `touch #{source}/testfile`
-  end
 
   describe 'exec!' do
-    context 'when method: symlink and source does not exist' do
-      it 'creates a symlink at the target' do
-        expect(Command).to receive(:run).with("mv /tmp/kiip-tests/source /tmp/kiip-tests/target").and_call_original
-        expect(Command).to receive(:run).with("ln -s /tmp/kiip-tests/target /tmp/kiip-tests/source").and_call_original
+    let(:mv_cmd){"mv #{source} #{target}" }
+    let(:symlink_cmd){ "ln -s #{target} #{source}" }
 
-        subject.exec!
+    before do
+      allow(Command).to receive(:run).with(mv_cmd)
+      allow(Command).to receive(:run).with(symlink_cmd)
+    end
 
-        expect(File.symlink?(source)).to be true
-        expect(File.exists?("#{target}/testfile")).to be true
+    subject { instance.exec! }
+
+    context '(when source is a file and target does not exist yet)' do
+      before do
+        allow(File).to receive(:exists?).with(source).and_return true
+        allow(File).to receive(:exists?).with(target).and_return false
+        subject
+      end
+
+      it 'moves the source to the target' do
+        expect(Command).to have_received(:run).with(mv_cmd)
+      end
+
+      it 'creates a symlink to the target' do
+        expect(Command).to have_received(:run).with(symlink_cmd)
+      end
+    end
+
+    context '(when source is a symlink, target does not exist)' do
+      before do
+        allow(File).to receive(:exists?).with(source).and_return true
+        allow(File).to receive(:exists?).with(target).and_return false
+        allow(File).to receive(:symlink?).and_return true
+      end
+
+      it 'raises an exception' do
+        expect{subject}.to raise_error RuntimeError
       end
     end
   end
