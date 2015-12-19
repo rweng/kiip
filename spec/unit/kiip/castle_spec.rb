@@ -40,8 +40,8 @@ describe Kiip::Castle do
     context '(when task does not exist)' do
       subject { instance.rm 'unknown-task' }
 
-      it 'raises an error' do
-        expect{subject}.to raise_error ArgumentError
+      it 'raises an NotFoundError' do
+        expect { subject }.to raise_error Kiip::Errors::NotFoundError
       end
     end
 

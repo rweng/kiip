@@ -56,8 +56,12 @@ module Kiip
       end
     end
 
-    def get_package! name
-      config.packages[name] || (raise ArgumentError.new("package #{name} not found"))
+
+    # @param [String] package name
+    # @return [Kiip::Package]
+    # @raise [Kiip::Errors::NotFoundError]
+    def get_package!(name)
+      config.packages[name] || (raise Kiip::Errors::NotFoundError.new, "package #{name} not found")
     end
 
     # track a folder or file under the given task name
@@ -65,8 +69,8 @@ module Kiip
       return unless ensure_existance
 
       package = Kiip::Package.new(
-                         name: name,
-                         source: path
+          name: name,
+          source: path
       )
 
       config.packages[package.name] = package
@@ -103,10 +107,6 @@ module Kiip
 
     def home_path
       File.join(path, 'home')
-    end
-
-    def path_for task_name
-      File.join(home_path, task_name)
     end
   end
 end
