@@ -15,13 +15,17 @@ module Kiip
       @config.load! if @config.exists?
     end
 
-    # lists all tasks
+    # lists all packages
     #
     # @return [Array<String>]
     def list
-      config.tasks.map do |task_name, task|
-        "#{task.name}: #{task.source} -> #{task.target}"
+      config.packages.map do |task_name, package|
+        "#{package.name}: #{package.source} -> #{package_path(package)}"
       end
+    end
+
+    def package_path package
+      File.join(path, 'home', package.name)
     end
 
     # remove a task from the castle
@@ -29,7 +33,7 @@ module Kiip
       config.rm task_name
       config.save!
 
-      task =get_task(task_name)
+      task =get_package(task_name)
       raise ArgumentError.new("task #{task_name} not found") unless task
 
       if remove_source or remove_source
@@ -49,21 +53,20 @@ module Kiip
       end
     end
 
-    def get_task name
-      config.tasks[name]
+    def get_package name
+      config.packages[name]
     end
 
     # track a folder or file under the given task name
     def track name, path
       return unless ensure_existance
 
-      task = Kiip::Task.new(
+      package = Kiip::Package.new(
                          name: name,
-                         source: path,
-                         target: File.join(home_path, name)
+                         source: path
       )
 
-      config.tasks[task.name] = task
+      config.packages[package.name] = package
       config.save!
 
       run name
@@ -71,8 +74,8 @@ module Kiip
 
     # executes a specific task
     def run name
-      task = config.tasks[name.to_s] || raise("task #{name} does not exist")
-      task.exec!
+      package = config.packages[name.to_s] || raise("package #{name} does not exist")
+      package.task.exec!
     end
 
     # returns true if castle exists, false if not

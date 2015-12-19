@@ -3,27 +3,26 @@ require 'spec_helper'
 describe Kiip::Castle do
   let(:castle_path) { '/castle_path' }
   let(:instance) { described_class.new(castle_path) }
-  let(:sample_task) { Kiip::Task.new(name: 'ssh', source: '~/.ssh', target: '/castle/home/ssh') }
+  let(:sample_package) { Kiip::Package.new(name: 'ssh', source: '~/.ssh', castle: instance) }
 
-  describe '.run' do
+  describe '#run' do
     it 'calls exec on the task' do
-      task = double(:task)
-      expect(task).to receive(:exec!)
-      instance.config.tasks['ssh'] = task
+      expect(sample_package.task).to receive(:exec!)
+      instance.config.packages['ssh'] = sample_package
       instance.run 'ssh'
     end
   end
 
   describe '#rm' do
     before do
-      instance.config.tasks['ssh'] = sample_task
+      instance.config.packages['ssh'] = sample_package
       allow(instance.config).to receive(:rm)
       allow(instance.config).to receive(:save!)
       allow(File).to receive(:rm)
     end
 
-    shared_examples 'removes the task' do
-      it 'removes the task from the config' do
+    shared_examples 'removes the package' do
+      it 'removes the package from the config' do
         expect(instance.config).to receive(:save!)
         subject
         expect(instance.config).to have_received(:rm).with('ssh')
@@ -41,29 +40,29 @@ describe Kiip::Castle do
     context '(when no options are provided)' do
       subject { instance.rm 'ssh' }
 
-      include_examples 'removes the task'
+      include_examples 'removes the package'
     end
 
     context '(when remove_source = true)' do
       subject { instance.rm 'ssh', remove_source: true }
 
-      include_examples 'removes the task'
+      include_examples 'removes the package'
 
       it 'removes the source' do
         subject
-        expect(File).to have_received(:rm).with(sample_task.source)
+        expect(File).to have_received(:rm).with(sample_package.source)
       end
     end
   end
 
-  describe '.list' do
-    it 'returns string of all tasks in the castle config to the output' do
-      instance.config.tasks['ssh'] = sample_task
-      expect(instance.list).to eq(['ssh: ~/.ssh -> /castle/home/ssh'])
+  describe '#list' do
+    it 'returns string of all packages in the castle config to the output' do
+      instance.config.packages['ssh'] = sample_package
+      expect(instance.list).to eq(['ssh: ~/.ssh -> /castle_path/home/ssh'])
     end
   end
 
-  describe '.track' do
+  describe '#track' do
     let(:track_name) { 'ssh' }
     let(:track_path) { '~/.ssh' }
     subject { instance.track track_name, track_path }
@@ -77,7 +76,7 @@ describe Kiip::Castle do
     shared_examples 'it tracks' do
       it 'adds the path to the castle config' do
         subject
-        expect(instance.config.tasks.keys).to eq(['ssh'])
+        expect(instance.config.packages.keys).to eq(['ssh'])
         expect(instance.config).to have_received(:save!)
       end
 

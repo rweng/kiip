@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Kiip::Castle::Config, type: :unit do
   let(:castle) { Kiip::Castle.new '/castle_path' }
   let(:config) { described_class.new castle }
-  let(:ssh_task) { Kiip::Task.new(name: 'ssh', source: '~/.ssh', target: '/castle_path/home/ssh') }
+  let(:ssh_package) { Kiip::Package.new(name: 'ssh', source: '~/.ssh') }
   let(:instance) { described_class.new castle }
   let(:tempfile) { Tempfile.new('castle-config') }
 
@@ -22,27 +22,27 @@ describe Kiip::Castle::Config, type: :unit do
       allow(instance).to receive(:path).and_return fixture_path('sample_castle_config.yml')
       instance.load!
 
-      expect(instance.tasks).to match({'ssh' => an_instance_of(Kiip::Task)})
+      expect(instance.packages).to match({'ssh' => an_instance_of(Kiip::Package)})
     end
   end
 
-  describe 'tasks' do
+  describe 'packages' do
     it 'is a Hash' do
-      expect(config.tasks).to be_an_instance_of Hash
+      expect(config.packages).to be_an_instance_of Hash
     end
   end
 
   describe 'save!' do
-    it 'writes tasks as yaml to path' do
+    it 'writes packages as yaml to path' do
       path = tempfile.path
       allow(config).to receive(:path).and_return path
 
-      config.tasks['ssh'] = ssh_task
+      config.packages['ssh'] = ssh_package
 
       config.save!
 
       expect(YAML.load_file(path)).to eq({
-                                             "tasks" => {
+                                             "packages" => {
                                                  "ssh" => {
                                                      "source" => "~/.ssh"
                                                  }

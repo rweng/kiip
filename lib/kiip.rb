@@ -13,6 +13,7 @@ module Kiip
   autoload :Syncer, 'kiip/syncer'
   autoload :Task, 'kiip/task'
   autoload :Castle, 'kiip/castle'
+  autoload :Package, 'kiip/package'
 
   def self.root
     File.expand_path(File.join(__dir__, '..'))

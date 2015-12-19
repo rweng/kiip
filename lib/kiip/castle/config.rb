@@ -3,26 +3,26 @@ require 'yaml'
 module Kiip
   class Castle
     class Config
-      attr_reader :castle, :tasks
+      attr_reader :castle, :packages
 
       def initialize castle
         @castle = castle
-        @tasks = {}
+        @packages = {}
       end
 
       # loads configuration from config file
       def load!
         content = YAML::load_file(path)
-        @tasks = content['tasks'].inject({}) do |result, k|
-          task_name, task_def = k
+        @packages = content['packages'].inject({}) do |result, k|
+          package_name, package_def = k
 
-          result[task_name] = Kiip::Task.new(name: task_name, source: task_def['source'], target: task_def['target'] || File.join(castle.path, task_name))
+          result[package_name] = Kiip::Package.new(name: package_name, source: package_def['source'], castle: castle)
           result
         end
       end
 
-      def rm task_name
-        @tasks.delete task_name
+      def rm package_name
+        @packages.delete package_name
       end
 
       def path
@@ -38,23 +38,16 @@ module Kiip
       end
 
       def file_content
-        tasks_hash = tasks.inject({}) do |result, ary|
-          task_name = ary.first
-          task = ary.last.to_h
-          task.delete :name
+        packages_hash = packages.values.inject({}) do |result, package|
+          result[package.name] = {
+              source: package.source
+          }.stringify_keys
 
-          if task[:target] == File.join(castle.home_path, task_name)
-            task.delete :target
-          else
-            binding.pry
-          end
-
-          result[task_name] = task.stringify_keys
           result
         end
 
         {
-            'tasks' => tasks_hash
+            'packages' => packages_hash
         }
       end
     end

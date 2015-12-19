@@ -8,6 +8,7 @@ Kiip, just another dotfiles tool to move your actual files and folders to a repo
 ## Terminology
 
 - `Castle`: the place where your packages are stored, e.g. `~/Dropbox/kiip`
+- `Package`: The file or folder in `PATH_TO_CASTLE/home/PACKAGE_NAME`
 - `Task`: How to sync your packages. Right now, only via symlink.
 
 ## Installation
