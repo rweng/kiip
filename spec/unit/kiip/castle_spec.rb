@@ -14,9 +14,9 @@ describe Kiip::Castle do
   end
 
   describe '#sync!' do
-    it 'calls #sync on the packages task' do
+    it 'calls #exec! on the packages task' do
       instance.config.packages[sample_package.name] = sample_package
-      expect(sample_package.task).to receive(:sync!)
+      expect(sample_package.task).to receive(:exec!)
       instance.sync! sample_package.name
     end
   end

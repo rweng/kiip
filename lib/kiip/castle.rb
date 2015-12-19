@@ -29,7 +29,7 @@ module Kiip
     end
 
     def sync! package_name
-      get_package!(package_name).task.sync!
+      get_package!(package_name).task.exec!
     end
 
     # remove a task from the castle
@@ -64,7 +64,9 @@ module Kiip
       config.packages[name] || (raise Kiip::Errors::NotFoundError.new, "package #{name} not found")
     end
 
-    # track a folder or file under the given task name
+    # adds a package to the repository and syncs it
+    # @param [String] name
+    # @param [String] path
     def track name, path
       return unless ensure_existance
 

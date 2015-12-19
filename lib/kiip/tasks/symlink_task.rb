@@ -15,28 +15,25 @@ module Kiip::Tasks
 
     # actually execute the task
     def exec!
-      if File.exists?(source)
-        raise 'source and target cant both exist' if File.exists?(target)
-        raise "source is a symlink: #{source}" if File.symlink? source
+      return initialize! unless File.exists? target
 
-        move_source_to_target
-        create_symlink_from_source_to_target
-      else
-        raise "source must exist: #{source}"
-      end
-    end
+      return create_symlink_from_source_to_target unless File.exists? source
 
-    # recreates the symlink if it does not exist
-    def sync!
-      return create_symlink_from_source_to_target if not File.exists? source
-
-      # return if its already the correct link
       return if File.symlink? source and File.readlink(source) == target
 
-      raise 'source does already exist'
+      raise 'source and target cant both exist' if File.exists?(target)
     end
 
     private
+    def initialize!
+      raise "source must exist to initalize: #{source}" unless File.exists? source
+      raise "source must not be a symlink: #{source}" if File.symlink? source
+
+      move_source_to_target
+      create_symlink_from_source_to_target
+    end
+
+
     def move_source_to_target
       FileUtils.mv source, target
     end
