@@ -13,6 +13,7 @@ module Kiip
   autoload :Syncer, 'kiip/syncer'
   autoload :Castle, 'kiip/castle'
   autoload :Package, 'kiip/package'
+  autoload :Errors, 'kiip/errors'
 
   module Tasks
     autoload :SymlinkTask, 'kiip/tasks/symlink_task'
