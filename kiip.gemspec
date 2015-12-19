@@ -24,6 +24,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "pry-stack_explorer"
   spec.add_development_dependency "rspec"
   spec.add_development_dependency "codecov"
+  spec.add_development_dependency "guard-rspec"
   spec.add_dependency "thor", " ~> 0.19.1"
   spec.add_dependency "hashie", " ~> 3.4.3"
   spec.add_dependency "command", " ~> 1.0.0"
