@@ -11,9 +11,12 @@ module Kiip
 
   autoload :Cli, 'kiip/cli'
   autoload :Syncer, 'kiip/syncer'
-  autoload :Task, 'kiip/task'
   autoload :Castle, 'kiip/castle'
   autoload :Package, 'kiip/package'
+
+  module Tasks
+    autoload :SymlinkTask, 'kiip/tasks/symlink_task'
+  end
 
   def self.root
     File.expand_path(File.join(__dir__, '..'))

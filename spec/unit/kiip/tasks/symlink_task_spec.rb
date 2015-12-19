@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Kiip::Task, type: :unit do
+describe Kiip::Tasks::SymlinkTask, type: :unit do
 
   let(:source){ '~/.ssh' }
   let(:target){ '~/Drobox/kiip/home/ssh' }

@@ -14,7 +14,7 @@ module Kiip
     def task
       raise 'castle must be set to create a task' if castle.nil?
 
-      @task ||= Kiip::Task.new(name: name, source: source, target: castle.package_path(self))
+      @task ||= Kiip::Tasks::SymlinkTask.new(name: name, source: source, target: castle.package_path(self))
     end
   end
 end

@@ -1,7 +1,7 @@
-module Kiip
+module Kiip::Tasks
 
   # basic task, just does symlinks. More might follow
-  class Task < Hashie::Dash
+  class SymlinkTask < Hashie::Dash
     include Hashie::Extensions::Dash::Coercion
 
     # task name for defining which ones to run
