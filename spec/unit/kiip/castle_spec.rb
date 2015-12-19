@@ -14,6 +14,48 @@ describe Kiip::Castle do
     end
   end
 
+  describe '#rm' do
+    before do
+      instance.config.tasks['ssh'] = sample_task
+      allow(instance.config).to receive(:rm)
+      allow(instance.config).to receive(:save!)
+      allow(File).to receive(:rm)
+    end
+
+    shared_examples 'removes the task' do
+      it 'removes the task from the config' do
+        expect(instance.config).to receive(:save!)
+        subject
+        expect(instance.config).to have_received(:rm).with('ssh')
+      end
+    end
+
+    context '(when task does not exist)' do
+      subject { instance.rm 'unknown-task' }
+
+      it 'raises an error' do
+        expect{subject}.to raise_error ArgumentError
+      end
+    end
+
+    context '(when no options are provided)' do
+      subject { instance.rm 'ssh' }
+
+      include_examples 'removes the task'
+    end
+
+    context '(when remove_source = true)' do
+      subject { instance.rm 'ssh', remove_source: true }
+
+      include_examples 'removes the task'
+
+      it 'removes the source' do
+        subject
+        expect(File).to have_received(:rm).with(sample_task.source)
+      end
+    end
+  end
+
   describe '.list' do
     it 'returns string of all tasks in the castle config to the output' do
       instance.config.tasks['ssh'] = sample_task

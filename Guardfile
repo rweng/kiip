@@ -35,6 +35,7 @@ guard :rspec, cmd: "bundle exec rspec" do
   watch(rspec.spec_helper) { rspec.spec_dir }
   watch(rspec.spec_support) { rspec.spec_dir }
   watch(%r{spec/unit/.+_spec.rb})
+  watch(%r{lib/(.+).rb}) { |m| "spec/unit/#{m[1]}_spec.rb" }
 
   # Ruby files
   ruby = dsl.ruby

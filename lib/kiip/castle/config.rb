@@ -1,5 +1,4 @@
 require 'yaml'
-require 'active_support/core_ext/hash/keys'
 
 module Kiip
   class Castle
@@ -20,6 +19,10 @@ module Kiip
           result[task_name] = Kiip::Task.new(name: task_name, source: task_def['source'], target: task_def['target'] || File.join(castle.path, task_name))
           result
         end
+      end
+
+      def rm task_name
+        @tasks.delete task_name
       end
 
       def path

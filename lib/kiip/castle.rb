@@ -22,6 +22,34 @@ module Kiip
       end
     end
 
+    def rm(task_name, remove_source: false, replace_source: false, remove_target: false)
+      config.rm task_name
+      config.save!
+
+      task =get_task(task_name)
+      raise ArgumentError.new("task #{task_name} not found") unless task
+
+      if remove_source or remove_source
+        File.rm task.source
+      end
+
+      if replace_source
+        if remove_target
+          FileUtils.mv task.target, task.source
+        else
+          FileUtils.cp_r task.target, task.source
+        end
+      end
+
+      if remove_target and not remove_source
+        File.rm task.target
+      end
+    end
+
+    def get_task name
+      config.tasks[name]
+    end
+
     def track name, path
       return unless ensure_existance
 

@@ -4,6 +4,7 @@ require 'thor'
 require 'hashie'
 require 'command'
 require 'highline'
+require 'active_support/core_ext/hash/keys'
 
 module Kiip
   CONFIG = '~/.kiip.rc.yml'
