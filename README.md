@@ -3,7 +3,12 @@
 [![Travis Status](https://travis-ci.org/rweng/kiip.svg)](https://travis-ci.org/rweng/kiip)
 [![codecov.io](http://codecov.io/github/rweng/kiip/coverage.svg?branch=master)](http://codecov.io/github/rweng/kiip?branch=master)
 
-Kiip, just another dotfiles tool.
+Kiip, just another dotfiles tool to move your actual files and folders to a repository (which can be synced by another tool) and replace them with symlinks.
+
+## Terminology
+
+- `Castle`: the place where your packages are stored, e.g. `~/Dropbox/kiip`
+- `Task`: How to sync your packages. Right now, only via symlink.
 
 ## Installation
 
