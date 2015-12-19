@@ -1,17 +1,18 @@
 module Kiip
   class Task < Hashie::Dash
     include Hashie::Extensions::Dash::Coercion
+
     # task name for defining which ones to run
-    property :name
+    property :name, required: true, coerce: String
 
     # the original
-    property :source, require: true
+    property :source, required: true, coerce: String
 
     # the place in the castle
-    property :target, required: true
+    property :target, required: true, coerce: String
 
-    # actually execute the definition
-    def exec
+    # actually execute the task
+    def exec!
       if File.exists?(source)
         raise 'source and target cant both exist' if File.exists?(target)
 

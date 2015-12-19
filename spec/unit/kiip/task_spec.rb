@@ -16,13 +16,13 @@ describe Kiip::Task, type: :unit do
     `touch #{source}/testfile`
   end
 
-  describe 'run' do
+  describe 'exec!' do
     context 'when method: symlink and source does not exist' do
       it 'creates a symlink at the target' do
         expect(Command).to receive(:run).with("mv /tmp/kiip-tests/source /tmp/kiip-tests/target").and_call_original
         expect(Command).to receive(:run).with("ln -s /tmp/kiip-tests/target /tmp/kiip-tests/source").and_call_original
 
-        subject.exec
+        subject.exec!
 
         expect(File.symlink?(source)).to be true
         expect(File.exists?("#{target}/testfile")).to be true

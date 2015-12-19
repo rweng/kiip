@@ -21,9 +21,12 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "bundler", "~> 1.10"
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "pry"
+  spec.add_development_dependency "pry-stack_explorer"
   spec.add_development_dependency "rspec"
   spec.add_development_dependency "codecov"
   spec.add_dependency "thor", " ~> 0.19.1"
   spec.add_dependency "hashie", " ~> 3.4.3"
   spec.add_dependency "command", " ~> 1.0.0"
+  spec.add_dependency "highline", " ~> 1.7.8"
+  spec.add_dependency "activesupport", " ~> 4.2.1"
 end

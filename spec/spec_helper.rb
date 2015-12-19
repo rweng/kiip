@@ -16,5 +16,6 @@ RSpec.configure do |config|
 
   config.before(:each) do
     allow(Command).to receive(:run) { |cmd| raise "unexpected run: '#{cmd}'" }
+    allow_any_instance_of(HighLine).to receive(:ask) { |obj, param| raise "unexpected ask: '#{param}'" }
   end
 end
