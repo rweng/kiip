@@ -2,7 +2,6 @@ require "kiip/version"
 
 require 'thor'
 require 'hashie'
-require 'command'
 require 'highline'
 require 'active_support/core_ext/hash/keys'
 

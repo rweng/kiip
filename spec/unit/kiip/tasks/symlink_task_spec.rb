@@ -12,7 +12,8 @@ describe Kiip::Tasks::SymlinkTask, type: :unit do
   ) }
 
   before do
-    allow(FileUtils).to receive(:symlink).with(source, target)
+    allow(instance).to receive(:move_source_to_target)
+    allow(instance).to receive(:create_symlink_from_source_to_target)
   end
 
   describe 'sync!' do
@@ -24,9 +25,9 @@ describe Kiip::Tasks::SymlinkTask, type: :unit do
       end
 
       it 'recreates the symlink' do
-        expect(FileUtils).to receive(:symlink).with(instance.source, instance.target) {}
-
         subject
+
+        expect(instance).to have_received(:create_symlink_from_source_to_target)
       end
     end
 
@@ -39,7 +40,7 @@ describe Kiip::Tasks::SymlinkTask, type: :unit do
 
       it 'does nothing' do
         subject
-        expect(FileUtils).not_to have_received(:symlink)
+        expect(instance).not_to have_received(:create_symlink_from_source_to_target)
       end
     end
 
@@ -50,18 +51,12 @@ describe Kiip::Tasks::SymlinkTask, type: :unit do
       end
 
       it 'raises an error' do
-        expect{subject}.to raise_error RuntimeError, 'source does already exist'
+        expect { subject }.to raise_error RuntimeError, 'source does already exist'
       end
     end
   end
 
   describe 'exec!' do
-    let(:mv_cmd) { "mv #{source} #{target}" }
-
-    before do
-      allow(Command).to receive(:run).with(mv_cmd)
-    end
-
     subject { instance.exec! }
 
     context '(when source is a file and target does not exist yet)' do
@@ -72,11 +67,11 @@ describe Kiip::Tasks::SymlinkTask, type: :unit do
       end
 
       it 'moves the source to the target' do
-        expect(Command).to have_received(:run).with(mv_cmd)
+        expect(instance).to have_received(:move_source_to_target)
       end
 
       it 'creates a symlink to the target' do
-        expect(FileUtils).to have_received(:symlink).with(source, target)
+        expect(instance).to have_received(:create_symlink_from_source_to_target)
       end
     end
 

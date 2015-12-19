@@ -19,7 +19,7 @@ module Kiip::Tasks
         raise 'source and target cant both exist' if File.exists?(target)
         raise "source is a symlink: #{source}" if File.symlink? source
 
-        Command.run "mv #{source} #{target}"
+        move_source_to_target
         create_symlink_from_source_to_target
       else
         raise "source must exist: #{source}"
@@ -37,6 +37,10 @@ module Kiip::Tasks
     end
 
     private
+    def move_source_to_target
+      FileUtils.mv source, target
+    end
+
     def create_symlink_from_source_to_target
       FileUtils.symlink(source, target)
     end

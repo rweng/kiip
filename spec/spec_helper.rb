@@ -15,7 +15,6 @@ RSpec.configure do |config|
   config.fail_fast = true
 
   config.before(:each) do
-    allow(Command).to receive(:run) { |cmd| raise "unexpected run: '#{cmd}'" }
     allow_any_instance_of(HighLine).to receive(:ask) { |obj, param| raise "unexpected ask: '#{param}'" }
     allow(FileUtils).to receive(:symlink) { |*params| raise "unexpected symlink: '#{params}'"}
   end
