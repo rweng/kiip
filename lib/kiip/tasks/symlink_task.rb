@@ -2,16 +2,16 @@ module Kiip::Tasks
 
   # basic task, just does symlinks. More might follow
   class SymlinkTask < Hashie::Dash
-    include Hashie::Extensions::Dash::Coercion
+    include Hashie::Extensions::Dash::PropertyTranslation
 
     # task name for defining which ones to run
     property :name, required: true, coerce: String
 
-    # the original
-    property :source, required: true, coerce: String
+    # the original, removes ending /
+    property :source, required: true, transform_with: ->(val) { val.to_s.gsub(/\/$/, '') }
 
     # the place in the castle
-    property :target, required: true, coerce: String
+    property :target, required: true, transform_with: ->(val) { val.to_s }
 
     # actually execute the task
     def exec!
@@ -57,6 +57,7 @@ module Kiip::Tasks
     end
 
     def create_symlink_from_source_to_target
+      puts source
       FileUtils.ln_s(target, source)
     end
   end

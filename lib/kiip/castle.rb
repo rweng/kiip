@@ -72,7 +72,8 @@ module Kiip
 
       package = Kiip::Package.new(
           name: name,
-          source: path
+          source: path,
+          castle: self
       )
 
       config.packages[package.name] = package

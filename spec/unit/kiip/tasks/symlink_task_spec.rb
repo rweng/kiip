@@ -22,7 +22,14 @@ describe Kiip::Tasks::SymlinkTask, type: :unit do
     allow(instance).to receive(:remove_source)
   end
 
-  describe 'exec!' do
+  describe '#source' do
+    it 'automatically strips trailing slashes' do
+      instance.source = '~/.ssh/'
+      expect(instance.source).to eq('~/.ssh')
+    end
+  end
+
+  describe '#exec!' do
     subject { instance.exec! }
 
     context '(when target does not exist)' do
