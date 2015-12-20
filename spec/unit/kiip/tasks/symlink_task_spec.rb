@@ -16,8 +16,10 @@ describe Kiip::Tasks::SymlinkTask, type: :unit do
   it_should_behave_like 'a task'
 
   before do
+    allow(File).to receive(:exists?).and_call_original
     allow(instance).to receive(:move_source_to_target)
     allow(instance).to receive(:create_symlink_from_source_to_target)
+    allow(instance).to receive(:remove_source)
   end
 
   describe 'exec!' do
@@ -91,14 +93,36 @@ describe Kiip::Tasks::SymlinkTask, type: :unit do
         end
       end
 
-      context '(when source does exist, but is not a symlink)' do
+      context '(when source does exist, but is not the correct symlink)' do
+        let(:answer) { 'n' }
         before do
+          allow(File).to receive(:exists?).and_return true
           allow(File).to receive(:exists?).with(source).and_return true
           allow(File).to receive(:symlink?).with(source).and_return false
+          allow(instance).to receive(:ask).and_return answer
         end
 
-        it 'raises an error' do
-          expect { subject }.to raise_error RuntimeError, 'source and target cant both exist'
+        it 'asks the user to replace source' do
+          subject
+          expect(instance).to have_received(:ask)
+        end
+
+        context '(when user says "y")' do
+          let(:answer) { 'y' }
+
+          it 'replaces the source with the correct symlink' do
+            subject
+            expect(instance).to have_received(:create_symlink_from_source_to_target)
+          end
+        end
+
+        context '(when user says "n")' do
+          let(:answer) { 'n' }
+
+          it 'does notthing' do
+            expect(instance).not_to have_received(:remove_source)
+            expect(instance).not_to have_received(:create_symlink_from_source_to_target)
+          end
         end
       end
     end

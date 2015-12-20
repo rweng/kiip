@@ -21,7 +21,17 @@ module Kiip::Tasks
 
       return if File.symlink? source and File.readlink(source) == target
 
-      raise 'source and target cant both exist' if File.exists?(target)
+
+      answer = nil
+      loop do
+        answer = ask "#{source} already exists. Replace with symlink to #{target}? (y/n)"
+        break if %w(y n).include? answer
+      end
+
+      if answer == 'y'
+        remove_source
+        create_symlink_from_source_to_target
+      end
     end
 
     private
@@ -33,6 +43,15 @@ module Kiip::Tasks
       create_symlink_from_source_to_target
     end
 
+    def remove_source
+      FileUtils.rm_f source
+    end
+
+    # @return [String] answer
+    def ask question
+      @cli ||= HighLine.new
+      @cli.ask(question)
+    end
 
     def move_source_to_target
       FileUtils.mv source, target
