@@ -21,7 +21,6 @@ module Kiip::Tasks
 
       return if File.symlink? source and File.readlink(source) == target
 
-
       answer = nil
       loop do
         answer = ask "#{source} already exists. Replace with symlink to #{target}? (y/n)"
@@ -58,7 +57,7 @@ module Kiip::Tasks
     end
 
     def create_symlink_from_source_to_target
-      FileUtils.symlink(source, target)
+      FileUtils.ln_s(target, source)
     end
   end
 end

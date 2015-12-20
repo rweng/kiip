@@ -112,6 +112,7 @@ describe Kiip::Tasks::SymlinkTask, type: :unit do
 
           it 'replaces the source with the correct symlink' do
             subject
+            expect(instance).to have_received(:remove_source)
             expect(instance).to have_received(:create_symlink_from_source_to_target)
           end
         end
