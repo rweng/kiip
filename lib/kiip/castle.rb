@@ -25,7 +25,7 @@ module Kiip
     end
 
     def package_path package
-      File.join(path, 'home', package.name)
+      File.join(path, package.name)
     end
 
     def sync! package_name
@@ -100,16 +100,12 @@ module Kiip
     end
 
     def create!
-      FileUtils.mkdir_p home_path
+      FileUtils.mkdir_p path
       config.save!
     end
 
     def exists?
-      Dir.exists?(home_path) and config.exists?
-    end
-
-    def home_path
-      File.join(path, 'home')
+      config.exists?
     end
   end
 end

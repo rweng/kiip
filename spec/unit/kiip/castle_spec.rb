@@ -66,7 +66,7 @@ describe Kiip::Castle do
   describe '#list' do
     it 'returns string of all packages in the castle config to the output' do
       instance.config.packages['ssh'] = sample_package
-      expect(instance.list).to eq(['ssh: ~/.ssh -> /castle_path/home/ssh'])
+      expect(instance.list).to eq(['ssh: ~/.ssh -> /castle_path/ssh'])
     end
   end
 
