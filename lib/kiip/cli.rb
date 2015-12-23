@@ -28,7 +28,7 @@ module Kiip
 
     private
     def repository
-      Kiip::Repository.get_instance(dry: options[:dry], verbose: options[:verbose])
+      Kiip::Repository.get_instance(is_dry: options[:dry], is_verbose: options[:verbose])
     end
   end
 end

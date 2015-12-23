@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Kiip::Repository do
-  let(:options) { {path: '/repository/path', dry: false} }
+  let(:options) { {path: '/repository/path'} }
   let(:repository) { described_class.new **options }
   let(:package_names){ %w(ssh) }
   let(:ssh_package){ double('ssh package', name: 'ssh', exists?: true, create!: nil, track: nil, decoded_content: %w(~/.ssh)) }
@@ -11,6 +11,7 @@ describe Kiip::Repository do
     allow(repository).to receive(:get_package).with('ssh').and_return ssh_package
     allow(repository).to receive(:exists?).and_return true
   end
+
 
   describe '#sync! ssh' do
     context '(when no name is given)' do

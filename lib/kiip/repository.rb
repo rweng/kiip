@@ -15,8 +15,8 @@ module Kiip
 
     include Hashie::Extensions::Dash::PropertyTranslation
     property :path, required: true, coerce: String
-    property :dry, transform_with: -> (val) { val.to_s == 'true' }
-    property :verbose, transform_with: -> (val) { val.to_s == 'true' }
+    property :is_dry, default: false
+    property :is_verbose, default: false
 
     def exists?
       id_file_path = File.join(path, ID_FILE_NAME)

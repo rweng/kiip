@@ -14,6 +14,10 @@ module Kiip::Tasks
     # the place in the castle
     property :target, required: true, transform_with: ->(val) { File.expand_path val.to_s }
 
+    property :is_verbose, default: false
+
+    property :is_dry, default: false
+
     # actually execute the task
     def exec!
       return initialize! unless File.exists? target
@@ -22,13 +26,7 @@ module Kiip::Tasks
 
       return if File.symlink? source and File.readlink(source) == target
 
-      answer = nil
-      loop do
-        answer = ask "#{source} already exists. Replace with symlink to #{target}? (y/n)"
-        break if %w(y n).include? answer
-      end
-
-      if answer == 'y'
+      if cli.agree "#{source} already exists. Replace with symlink?"
         remove_source
         create_symlink_from_source_to_target
       end
@@ -40,6 +38,10 @@ module Kiip::Tasks
     end
 
     private
+    def cli
+      HighLine.new
+    end
+
     def initialize!
       raise "source must exist to initalize: #{source}" unless File.exists? source
       raise "source must not be a symlink: #{source}" if File.symlink? source
@@ -49,25 +51,19 @@ module Kiip::Tasks
     end
 
     def copy_target_to_source
-      FileUtils.cp_r(target, source, verbose: true)
+      FileUtils.cp_r(target, source, verbose: is_verbose, noop: is_dry)
     end
 
     def remove_source
-      FileUtils.rm_f(source, verbose: true)
-    end
-
-    # @return [String] answer
-    def ask question
-      @cli ||= HighLine.new
-      @cli.ask(question)
+      FileUtils.rm_f(source, verbose: is_verbose, noop: is_dry)
     end
 
     def move_source_to_target
-      FileUtils.mv(source, target, verbose: true)
+      FileUtils.mv(source, target, verbose: is_verbose, noop: is_dry)
     end
 
     def create_symlink_from_source_to_target
-      FileUtils.ln_s(target, source, verbose: true)
+      FileUtils.ln_s(target, source, verbose: is_verbose, noop: is_dry)
     end
   end
 end

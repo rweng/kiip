@@ -26,9 +26,7 @@ module Kiip
         # escape /
         escaped_tracking_path = self.class.encode tracking_path
 
-        puts "running SymlinkTask: #{tracking_path} -> #{File.join(path, escaped_tracking_path)}"
-
-        return if repository.dry
+        return if repository.is_dry
 
         task = Tasks::SymlinkTask.new(name: 'task-name', source: tracking_path, target: File.join(path, escaped_tracking_path))
         task.exec!

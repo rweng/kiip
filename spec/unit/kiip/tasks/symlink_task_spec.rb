@@ -101,21 +101,23 @@ describe Kiip::Tasks::SymlinkTask, type: :unit do
       end
 
       context '(when source does exist, but is not the correct symlink)' do
-        let(:answer) { 'n' }
+        let(:answer) { false }
+        let(:cli) { double('cli', agree: answer) }
+
         before do
           allow(File).to receive(:exists?).and_return true
           allow(File).to receive(:exists?).with(source).and_return true
           allow(File).to receive(:symlink?).with(source).and_return false
-          allow(instance).to receive(:ask).and_return answer
+          allow(instance).to receive(:cli).and_return cli
         end
 
         it 'asks the user to replace source' do
           subject
-          expect(instance).to have_received(:ask)
+          expect(cli).to have_received(:agree)
         end
 
-        context '(when user says "y")' do
-          let(:answer) { 'y' }
+        context '(when user says "yes")' do
+          let(:answer) { true }
 
           it 'replaces the source with the correct symlink' do
             subject
@@ -124,8 +126,8 @@ describe Kiip::Tasks::SymlinkTask, type: :unit do
           end
         end
 
-        context '(when user says "n")' do
-          let(:answer) { 'n' }
+        context '(when user says "no")' do
+          let(:answer) { false }
 
           it 'does notthing' do
             expect(instance).not_to have_received(:remove_source)
