@@ -21,21 +21,7 @@ describe 'kiip', type: :integration do
   end
 
   describe 'sync PACKAGE' do
-    context '(when source is already the correct symlink)' do
-      it 'does nothing' do
-        cli.sync package_name
-
-        expect(File.symlink? tracked_path).to be true
-        expect(File.readlink tracked_path).to eq(tracked_path_in_repo)
-      end
-    end
-
-    context '(when source is a file or folder)' do
-      before do
-        FileUtils.rm tracked_path
-        FileUtils.touch tracked_path
-      end
-
+    shared_examples 'it asks the user to replace it' do
       it 'asks the user if the file/folder should be replaced' do
         expect_any_instance_of(HighLine).to receive(:agree).and_return 'no'
 
@@ -51,8 +37,34 @@ describe 'kiip', type: :integration do
           expect(File.symlink? tracked_path).to be true
           expect(File.readlink tracked_path).to eq(tracked_path_in_repo)
         end
-
       end
+    end
+
+    context '(when source is already the correct symlink)' do
+      it 'does nothing' do
+        cli.sync package_name
+
+        expect(File.symlink? tracked_path).to be true
+        expect(File.readlink tracked_path).to eq(tracked_path_in_repo)
+      end
+    end
+
+    context '(when source is a symlink but pointing somewhere else)' do
+      before do
+        FileUtils.rm tracked_path
+        FileUtils.ln_s '/non-existant-symlink', tracked_path
+      end
+
+      include_examples 'it asks the user to replace it'
+    end
+
+    context '(when source is a file)' do
+      before do
+        FileUtils.rm tracked_path
+        FileUtils.touch tracked_path
+      end
+
+      include_examples 'it asks the user to replace it'
     end
 
     context '(when source does not exist)' do
@@ -68,6 +80,8 @@ describe 'kiip', type: :integration do
       end
     end
   end
+
+
 
   describe 'rm PACKAGE' do
     it 'replaces the source with the target' do

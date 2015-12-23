@@ -21,10 +21,16 @@ module Kiip::Tasks
     # actually execute the task
     def exec!
       return initialize! unless File.exists? target
+      if File.symlink? source
+        return if File.readlink(source) == target
+
+        if cli.agree "#{source} already exists, linking to #{File.readlink(source)}. Replace?"
+          remove_source
+        end
+      end
+
 
       return create_symlink_from_source_to_target unless File.exists? source
-
-      return if File.symlink? source and File.readlink(source) == target
 
       if cli.agree "#{source} already exists. Replace with symlink?"
         remove_source
@@ -55,7 +61,10 @@ module Kiip::Tasks
     end
 
     def remove_source
-      FileUtils.rm_f(source, verbose: is_verbose, noop: is_dry)
+      # only force on real directories
+      do_force = !File.symlink?(source) and File.directory?(source)
+
+      FileUtils.rm(source, verbose: is_verbose, noop: is_dry, force: do_force)
     end
 
     def move_source_to_target
