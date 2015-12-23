@@ -3,12 +3,6 @@ module Kiip
     class_option :dry, :type => :boolean, default: false
     class_option :verbose, :type => :boolean, default: false
 
-    def initialize *args
-      raise 'only osx supported right now' unless RUBY_PLATFORM.include? 'darwin'
-
-      super
-    end
-
     desc 'track PACKAGE_NAME PATH', 'tracks the file or folder under PATH with the package name NAME. wrap PATH in quotes to ensure ~ and env variables are kept.'
     def track package_name, file_or_folder
       repository.track(package_name, file_or_folder)
