@@ -49,7 +49,7 @@ module Kiip::Tasks
     end
 
     def copy_target_to_source
-      FileUtils.cp_r(target, source)
+      FileUtils.cp_r(target, source, verbose: true)
     end
 
     def remove_source

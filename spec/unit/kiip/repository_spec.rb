@@ -4,7 +4,7 @@ describe Kiip::Repository do
   let(:options) { {path: '/repository/path', dry: false} }
   let(:repository) { described_class.new **options }
   let(:package_names){ %w(ssh) }
-  let(:ssh_package){ double('ssh package', name: 'ssh', exists?: true, create!: nil, track: nil, content: %w(~:.ssh)) }
+  let(:ssh_package){ double('ssh package', name: 'ssh', exists?: true, create!: nil, track: nil, decoded_content: %w(~/.ssh)) }
 
   before do
     allow(repository).to receive(:package_names).and_return package_names

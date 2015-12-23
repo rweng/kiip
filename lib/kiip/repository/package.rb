@@ -1,8 +1,19 @@
+require "base64"
+
 module Kiip
   class Repository
     class Package < Hashie::Dash
-      include Hashie::Extensions::Dash::Coercion
+      class << self
+        def encode path
+          Base64.encode64 path
+        end
 
+        def decode path
+          Base64.decode64 path
+        end
+      end
+
+      include Hashie::Extensions::Dash::Coercion
       property :name, required: true, coerce: String
       property :repository, required: true
 
@@ -13,7 +24,7 @@ module Kiip
         tracking_path = tracking_path.gsub %r{^#{File.expand_path('~')}}, '~'
 
         # escape /
-        escaped_tracking_path = tracking_path.gsub '/', ':'
+        escaped_tracking_path = self.class.encode tracking_path
 
         puts "running SymlinkTask: #{tracking_path} -> #{File.join(path, escaped_tracking_path)}"
 
@@ -25,15 +36,14 @@ module Kiip
 
       def sync!
         content.each do |subpath|
-          source = subpath.gsub ':', '/'
+          source = self.class.decode subpath
           task = Tasks::SymlinkTask.new(name: 'task-name', source: source, target: File.join(path, subpath))
           task.exec!
         end
       end
 
-      # @return [String[]] array of package content files/folders
-      def content
-        Pathname.new(path).children.map(&:basename).map(&:to_s)
+      def decoded_content
+        content.map { |s| self.class.decode s }
       end
 
       # creates the package or raises an error
@@ -43,7 +53,7 @@ module Kiip
 
       def rm
         content.each do |subpath|
-          source = subpath.gsub ':', '/'
+          source = self.class.decode subpath
           task = Tasks::SymlinkTask.new(name: 'task-name', source: source, target: File.join(path, subpath))
           task.restore
         end
@@ -56,6 +66,12 @@ module Kiip
 
       def path
         File.join(repository.path, name)
+      end
+
+      private
+      # @return [String[]] array of package content files/folders
+      def content
+        Pathname.new(path).children.map(&:basename).map(&:to_s)
       end
     end
   end

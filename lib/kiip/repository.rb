@@ -5,16 +5,18 @@ module Kiip
     autoload :Package, 'kiip/repository/package'
     ID_FILE_NAME = '.kiip_repository'
 
-    def self.get_instance(dry: false)
+    def self.get_instance(**options)
       path = ENV['KIIP_REPO'] || raise('KIIP_REPO environment variable not defined')
 
+      options[:path] = path
 
-      return self.new(path: path, dry: dry)
+      return self.new(**options)
     end
 
     include Hashie::Extensions::Dash::PropertyTranslation
     property :path, required: true, coerce: String
     property :dry, transform_with: -> (val) { val.to_s == 'true' }
+    property :verbose, transform_with: -> (val) { val.to_s == 'true' }
 
     def exists?
       id_file_path = File.join(path, ID_FILE_NAME)
@@ -38,7 +40,7 @@ module Kiip
       StringIO.open do |result|
         packages.each do |package|
           result.puts package.name + ':'
-          package.content.each { |content| result.puts '  ' + content.gsub(':', '/') }
+          package.decoded_content.each { |content| result.puts '  ' + content }
         end
 
         result.string

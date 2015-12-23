@@ -1,6 +1,7 @@
 module Kiip
   class Cli < Thor
     class_option :dry, :type => :boolean, default: false
+    class_option :verbose, :type => :boolean, default: false
 
     def initialize *args
       raise 'only osx supported right now' unless RUBY_PLATFORM.include? 'darwin'
@@ -33,7 +34,7 @@ module Kiip
 
     private
     def repository
-      Kiip::Repository.get_instance(dry: options[:dry])
+      Kiip::Repository.get_instance(dry: options[:dry], verbose: options[:verbose])
     end
   end
 end
