@@ -20,5 +20,12 @@ module Kiip
 
       @task ||= Kiip::Tasks::SymlinkTask.new(name: name, source: source, target: castle.package_path(self))
     end
+
+    def to_h
+      {
+          name: name,
+          source: source
+      }
+    end
   end
 end

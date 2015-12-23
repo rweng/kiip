@@ -19,7 +19,15 @@ module Kiip
         @packages = package_definitions.inject({}) do |result, k|
           package_name, package_def = k
 
-          result[package_name] = Kiip::Package.new(name: package_name, source: package_def['source'], castle: castle)
+          # transform package_def from Hashie::Mash to Hash
+          package_def = package_def.to_h.symbolize_keys
+
+          # re-set properties we stripped out in #file_content
+          package_def[:name] = package_name
+          package_def[:castle] = castle
+
+          # create the package and add it to @packages
+          result[package_name] = Kiip::Package.new(package_def)
           result
         end
       end
@@ -42,10 +50,10 @@ module Kiip
 
       def file_content
         packages_hash = packages.values.inject({}) do |result, package|
-          result[package.name] = {
-              source: package.source
-          }.stringify_keys
+          hash = package.to_h
+          package_name = hash.delete :name
 
+          result[package_name] = hash.stringify_keys
           result
         end
 
