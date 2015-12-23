@@ -7,9 +7,8 @@ Kiip, just another dotfiles tool to move your actual files and folders to a repo
 
 ## Terminology
 
-- `Castle`: the place where your packages are stored, e.g. `~/Dropbox/kiip`
+- `Repository`: the place where your packages are stored, e.g. `~/Dropbox/kiip`
 - `Package`: The file or folder in `PATH_TO_CASTLE/home/PACKAGE_NAME`
-- `Task`: How to sync your packages. Right now, only via symlink.
 
 ## Installation
 
@@ -18,11 +17,21 @@ Kiip, just another dotfiles tool to move your actual files and folders to a repo
 ## Usage
 
     Commands:
-        kiip help [COMMAND]   # Describe available commands or one specific command
-        kiip list             # lists all packages
-        kiip rm NAME          # removes package with name NAME, see: kiip help rm
-        kiip sync NAME        # recreates the source of the package (via symlink, copy, etc)
-        kiip track NAME PATH  # tracks the file or folder under PATH with the package name NAME
+      kiip help [COMMAND]           # Describe available commands or one specific command
+      kiip list                     # lists all packages
+      kiip rm NAME                  # removes package with name NAME, see: kiip help rm
+      kiip sync PACKAGE_NAME        # recreates the source of the package (via symlink, copy, etc)
+      kiip track PACKAGE_NAME PATH  # tracks the file or folder under PATH with the package name NAME....
+    
+    Options:
+      [--dry], [--no-dry]
+      
+    Examples:
+        kiip track ssh ~/.ssh 
+        kiip list 
+          ssh:
+            ~/.ssh
+        
 
 ## Development
 

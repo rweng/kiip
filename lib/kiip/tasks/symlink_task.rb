@@ -8,10 +8,11 @@ module Kiip::Tasks
     property :name, required: true, coerce: String
 
     # the original, removes ending /
-    property :source, required: true, transform_with: ->(val) { val.to_s.gsub(/\/$/, '') }
+    # we must call expand_path to ensure FileUtils.ln_s, File.exists? etc work correctly
+    property :source, required: true, transform_with: ->(val) { File.expand_path val.to_s.gsub(/\/$/, '') }
 
     # the place in the castle
-    property :target, required: true, transform_with: ->(val) { val.to_s }
+    property :target, required: true, transform_with: ->(val) { File.expand_path val.to_s }
 
     # actually execute the task
     def exec!
@@ -43,7 +44,7 @@ module Kiip::Tasks
     end
 
     def remove_source
-      FileUtils.rm_f source
+      FileUtils.rm_f(source, verbose: true)
     end
 
     # @return [String] answer
@@ -53,12 +54,11 @@ module Kiip::Tasks
     end
 
     def move_source_to_target
-      FileUtils.mv source, target
+      FileUtils.mv(source, target, verbose: true)
     end
 
     def create_symlink_from_source_to_target
-      puts source
-      FileUtils.ln_s(target, source)
+      FileUtils.ln_s(target, source, verbose: true)
     end
   end
 end

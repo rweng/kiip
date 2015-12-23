@@ -1,18 +1,26 @@
 module Kiip
   class Cli < Thor
-    desc 'track PACKAGE_NAME PATH', 'tracks the file or folder under PATH with the package name NAME'
+    class_option :dry, :type => :boolean, default: false
+
+    def initialize *args
+      raise 'only osx supported right now' unless RUBY_PLATFORM.include? 'darwin'
+
+      super
+    end
+
+    desc 'track PACKAGE_NAME PATH', 'tracks the file or folder under PATH with the package name NAME. wrap PATH in quotes to ensure ~ and env variables are kept.'
     def track package_name, file_or_folder
-      Kiip::Castle.get_instance.track(package_name, file_or_folder)
+      repository.track(package_name, file_or_folder)
     end
 
     desc 'sync PACKAGE_NAME', 'recreates the source of the package (via symlink, copy, etc)'
     def sync package_name
-      Kiip::Castle.get_instance.sync!(package_name)
+      repository.sync!(package_name)
     end
 
     desc 'list', 'lists all packages'
     def list
-      Kiip::Castle.get_instance.list.each {|line| puts line}
+      puts repository.print_content
     end
 
     option :remove_source, default: false, type: :boolean, desc: 'if the source should be removed, defaults to false'
@@ -20,7 +28,12 @@ module Kiip
     option :replace_source, default: false, type: :boolean, desc: 'if the source should be replaced with the target, defaults to false'
     desc 'rm NAME', 'removes package with name NAME, see: kiip help rm'
     def rm package_name
-      Kiip::Castle.get_instance.rm package_name, **(options.to_h.symbolize_keys)
+      repository.rm package_name, **(options.to_h.symbolize_keys)
+    end
+
+    private
+    def repository
+      Kiip::Repository.get_instance(dry: options[:dry])
     end
   end
 end

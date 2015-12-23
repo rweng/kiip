@@ -6,12 +6,9 @@ require 'highline'
 require 'active_support/core_ext/hash/keys'
 
 module Kiip
-  CONFIG = '~/.kiip.rc.yml'
-
   autoload :Cli, 'kiip/cli'
   autoload :Syncer, 'kiip/syncer'
-  autoload :Castle, 'kiip/castle'
-  autoload :Package, 'kiip/package'
+  autoload :Repository, 'kiip/repository'
   autoload :Errors, 'kiip/errors'
 
   module Tasks

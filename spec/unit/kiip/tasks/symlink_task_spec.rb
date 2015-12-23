@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe Kiip::Tasks::SymlinkTask, type: :unit do
 
-  let(:source) { '~/.ssh' }
-  let(:target) { '~/Drobox/kiip/home/ssh' }
+  let(:source) { '/tmp/.ssh' }
+  let(:target) { '/tmp/Drobox/kiip/home/ssh' }
 
   let(:instance) { described_class.new(
       name: 'def_name',
@@ -24,8 +24,8 @@ describe Kiip::Tasks::SymlinkTask, type: :unit do
 
   describe '#source' do
     it 'automatically strips trailing slashes' do
-      instance.source = '~/.ssh/'
-      expect(instance.source).to eq('~/.ssh')
+      instance.source = '/tmp/.ssh/'
+      expect(instance.source).to eq('/tmp/.ssh')
     end
   end
 
