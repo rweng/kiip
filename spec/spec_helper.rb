@@ -14,7 +14,7 @@ RSpec.configure do |config|
 
   config.fail_fast = true
 
-  config.before(:each) do
+  config.before(type: :unit) do
     allow_any_instance_of(HighLine).to receive(:ask) { |obj, param| raise "unexpected ask: '#{param}'" }
     allow(FileUtils).to receive(:symlink) { |*params| raise "unexpected symlink: '#{params}'"}
     allow(Dir).to receive(:mkdir) { |*params| raise "unexpected mkdir: '#{params}'"}

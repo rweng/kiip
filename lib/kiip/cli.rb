@@ -28,7 +28,7 @@ module Kiip
     option :replace_source, default: false, type: :boolean, desc: 'if the source should be replaced with the target, defaults to false'
     desc 'rm NAME', 'removes package with name NAME, see: kiip help rm'
     def rm package_name
-      repository.rm package_name, **(options.to_h.symbolize_keys)
+      repository.rm package_name
     end
 
     private

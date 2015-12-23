@@ -5,8 +5,10 @@ module Kiip
     autoload :Package, 'kiip/repository/package'
     ID_FILE_NAME = '.kiip_repository'
 
-    def self.get_instance(dry:)
+    def self.get_instance(dry: false)
       path = ENV['KIIP_REPO'] || raise('KIIP_REPO environment variable not defined')
+
+
       return self.new(path: path, dry: dry)
     end
 
@@ -25,6 +27,7 @@ module Kiip
     end
 
     def track package_name, path
+      return unless ensure_existance
       package = get_package(package_name)
       package.create! unless package.exists?
       package.track(path)
@@ -48,7 +51,31 @@ module Kiip
       end
     end
 
+    def create!
+      FileUtils.mkdir_p(path)
+      FileUtils.touch(File.join(path, ID_FILE_NAME))
+    end
+
+    def rm *package_names
+      package_names.each do |package_name|
+        get_package(package_name).rm
+      end
+    end
+
     private
+    # asks user to create repository if it doesn't exist
+    #
+    # @return [boolean] true if repo exists now
+    def ensure_existance
+      return true if exists?
+
+      if HighLine.new.agree("Repository #{path} does not exist. Want me to create it? (yes/no)")
+        create!
+      end
+
+      exists?
+    end
+
     def get_package(package_name)
       Package.new(name: package_name, repository: self)
     end

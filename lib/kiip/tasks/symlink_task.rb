@@ -34,6 +34,11 @@ module Kiip::Tasks
       end
     end
 
+    def restore
+      remove_source
+      copy_target_to_source
+    end
+
     private
     def initialize!
       raise "source must exist to initalize: #{source}" unless File.exists? source
@@ -41,6 +46,10 @@ module Kiip::Tasks
 
       move_source_to_target
       create_symlink_from_source_to_target
+    end
+
+    def copy_target_to_source
+      FileUtils.cp_r(target, source)
     end
 
     def remove_source

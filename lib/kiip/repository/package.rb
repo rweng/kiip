@@ -1,6 +1,8 @@
 module Kiip
   class Repository
     class Package < Hashie::Dash
+      include Hashie::Extensions::Dash::Coercion
+
       property :name, required: true, coerce: String
       property :repository, required: true
 
@@ -31,12 +33,20 @@ module Kiip
 
       # @return [String[]] array of package content files/folders
       def content
-        Pathname.new(path).children.select(&:directory?).map(&:basename).map(&:to_s)
+        Pathname.new(path).children.map(&:basename).map(&:to_s)
       end
 
       # creates the package or raises an error
       def create!
         Dir.mkdir(path)
+      end
+
+      def rm
+        content.each do |subpath|
+          source = subpath.gsub ':', '/'
+          task = Tasks::SymlinkTask.new(name: 'task-name', source: source, target: File.join(path, subpath))
+          task.restore
+        end
       end
 
       # @return [boolean]

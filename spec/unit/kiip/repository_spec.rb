@@ -9,6 +9,7 @@ describe Kiip::Repository do
   before do
     allow(repository).to receive(:package_names).and_return package_names
     allow(repository).to receive(:get_package).with('ssh').and_return ssh_package
+    allow(repository).to receive(:exists?).and_return true
   end
 
   describe '#sync! ssh' do
@@ -20,28 +21,6 @@ describe Kiip::Repository do
 
         subject
       end
-    end
-  end
-
-  describe '#exists?' do
-    let(:id_file_exists_return_value) { false }
-
-    before do
-      allow(File).to receive(:exists?).with(File.join(repository.path, Kiip::Repository::ID_FILE_NAME)).and_return id_file_exists_return_value
-    end
-
-    subject { repository.exists? }
-
-    context "(when #{Kiip::Repository::ID_FILE_NAME} exists in the repository folder)" do
-      let(:id_file_exists_return_value) { true }
-
-      it { is_expected.to be true }
-    end
-
-    context "(when #{Kiip::Repository::ID_FILE_NAME} does not exist exists in the repository folder)" do
-      let(:id_file_exists_return_value) { false }
-
-      it { is_expected.to be false }
     end
   end
 

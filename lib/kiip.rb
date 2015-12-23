@@ -1,9 +1,9 @@
-require "kiip/version"
-
 require 'thor'
 require 'hashie'
 require 'highline'
 require 'active_support/core_ext/hash/keys'
+
+require 'kiip/version'
 
 module Kiip
   autoload :Cli, 'kiip/cli'
