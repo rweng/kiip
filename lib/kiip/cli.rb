@@ -23,15 +23,12 @@ module Kiip
       repository.restore package_name
     end
 
-    desc 'list', 'lists all packages'
+    desc 'list', 'lists all packages with content'
     def list
       puts repository.print_content
     end
 
-    option :remove_source, default: false, type: :boolean, desc: 'if the source should be removed, defaults to false'
-    option :remove_target, default: false, type: :boolean, desc: 'if the source should be removed, defaults to false'
-    option :replace_source, default: false, type: :boolean, desc: 'if the source should be replaced with the target, defaults to false'
-    desc 'rm NAME', 'removes package with name NAME, see: kiip help rm'
+    desc 'rm NAME', 'removes package with name NAME from the repository'
     def rm package_name
       repository.rm package_name
     end

@@ -111,8 +111,7 @@ describe 'kiip', type: :integration do
     it 'replaces the source with the target' do
       cli.rm package_name
 
-      expect(File.exists? tracked_path).to be true
-      expect(File.symlink? tracked_path).to be false
+      expect(File.exists? File.join(repo_path, package_name)).to be false
     end
   end
 

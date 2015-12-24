@@ -68,11 +68,7 @@ module Kiip
       end
 
       def rm
-        content.each do |subpath|
-          source = self.class.decode subpath
-          task = Tasks::SymlinkTask.new(name: 'task-name', source: source, target: File.join(path, subpath))
-          task.restore
-        end
+        FileUtils.rm_r(path, verbose: repository.is_verbose, noop: repository.is_dry)
       end
 
       # @return [boolean]
