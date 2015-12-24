@@ -17,6 +17,15 @@ module Kiip
       property :name, required: true, coerce: String
       property :repository, required: true
 
+      # removes the links to the package content
+      def unlink
+        content.each do |encoded_orginal_path|
+          decoded_original_path = self.class.decode encoded_orginal_path
+          if File.symlink?(decoded_original_path) and File.readlink(decoded_original_path) == File.join(path, encoded_orginal_path)
+            FileUtils.rm decoded_original_path
+          end
+        end
+      end
 
       def track(tracking_path)
         raise "path does not exist: #{tracking_path}" unless File.exists?(File.expand_path tracking_path)

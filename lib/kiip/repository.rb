@@ -23,6 +23,12 @@ module Kiip
       File.exists? id_file_path
     end
 
+    def unlink *package_names
+      package_names.each do |name|
+        get_package(name).unlink
+      end
+    end
+
     def sync! *names
       names = package_names if names.empty?
       names.each { |name| get_package(name).sync! }

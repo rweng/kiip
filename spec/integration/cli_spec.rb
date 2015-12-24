@@ -20,6 +20,17 @@ describe 'kiip', type: :integration do
     FileUtils.remove_entry test_dir
   end
 
+  describe 'unlink PACKAGE' do
+    subject { cli.unlink package_name }
+
+    it 'removes the links' do
+      subject
+
+      expect(File.symlink? tracked_path).to be false
+      expect(File.exist? tracked_path).to be false
+    end
+  end
+
   describe 'link PACKAGE' do
     subject { cli.link package_name }
 

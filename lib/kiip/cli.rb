@@ -13,6 +13,11 @@ module Kiip
       repository.sync!(package_name)
     end
 
+    desc 'unlink PACKAGE_NAME', 'removes the links to the package files'
+    def unlink package_name
+      repository.unlink(package_name)
+    end
+
     desc 'list', 'lists all packages'
     def list
       puts repository.print_content
