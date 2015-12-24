@@ -31,6 +31,18 @@ describe 'kiip', type: :integration do
     end
   end
 
+  describe 'restore PACKAGE' do
+    subject { cli.restore package_name }
+
+    it 'replaces the links with the actual content' do
+      subject
+
+      expect(File.symlink? tracked_path).to be false
+      expect(File.exist? tracked_path).to be true
+      expect(File.read tracked_path).to eq(File.read tracked_path_in_repo)
+    end
+  end
+
   describe 'link PACKAGE' do
     subject { cli.link package_name }
 

@@ -18,6 +18,11 @@ module Kiip
       repository.unlink(package_name)
     end
 
+    desc 'restore PACKAGE_NAME', 'restores the content of the package to the original places'
+    def restore package_name
+      repository.restore package_name
+    end
+
     desc 'list', 'lists all packages'
     def list
       puts repository.print_content

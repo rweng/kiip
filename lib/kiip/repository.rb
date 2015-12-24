@@ -29,6 +29,12 @@ module Kiip
       end
     end
 
+    def restore *package_names
+      package_names.each do |name|
+        get_package(name).restore
+      end
+    end
+
     def sync! *names
       names = package_names if names.empty?
       names.each { |name| get_package(name).sync! }
