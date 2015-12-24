@@ -80,7 +80,6 @@ module Kiip
         File.join(repository.path, name)
       end
 
-      private
       # @return [String[]] array of package content files/folders
       def content
         Pathname.new(path).children.map(&:basename).map(&:to_s)

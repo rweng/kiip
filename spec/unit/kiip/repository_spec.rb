@@ -40,22 +40,4 @@ describe Kiip::Repository do
       end
     end
   end
-
-  describe '#print_content' do
-    subject { repository.print_content }
-
-    context 'when a package with name "ssh" exists with content "~/.ssh"' do
-      before do
-        allow(ssh_package).to receive(:entries).with(File.join(repository.path, 'ssh')).and_return %w(. .. ~/.ssh)
-        allow(Dir).to receive(:entries).with(File.join(repository.path, 'ssh')).and_return %w(. .. ~/.ssh)
-      end
-
-      it do
-        is_expected.to eq <<-END
-ssh:
-  ~/.ssh
-        END
-      end
-    end
-  end
 end

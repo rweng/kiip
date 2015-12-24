@@ -20,6 +20,19 @@ describe 'kiip', type: :integration do
     FileUtils.remove_entry test_dir
   end
 
+  describe 'list' do
+    subject { cli.list }
+
+    it 'prints out the packages with files and status' do
+      expected = <<-END
+track:
+  #{tracked_path} | linked
+      END
+
+      expect { subject }.to output(expected).to_stdout
+    end
+  end
+
   describe 'unlink PACKAGE' do
     subject { cli.unlink package_name }
 
