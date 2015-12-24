@@ -8,8 +8,8 @@ module Kiip
       repository.track(package_name, file_or_folder)
     end
 
-    desc 'sync PACKAGE_NAME', 'recreates the source of the package (via symlink, copy, etc)'
-    def sync package_name
+    desc 'link PACKAGE_NAME', 'ensures links to the package files exist'
+    def link package_name
       repository.sync!(package_name)
     end
 

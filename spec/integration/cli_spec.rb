@@ -20,19 +20,21 @@ describe 'kiip', type: :integration do
     FileUtils.remove_entry test_dir
   end
 
-  describe 'sync PACKAGE' do
+  describe 'link PACKAGE' do
+    subject { cli.link package_name }
+
     shared_examples 'it asks the user to replace it' do
       it 'asks the user if the file/folder should be replaced' do
         expect_any_instance_of(HighLine).to receive(:agree).and_return 'no'
 
-        cli.sync package_name
+        subject
       end
 
       context '(when users says yes)' do
         it 'replaces the files through a symlink' do
           expect_any_instance_of(HighLine).to receive(:agree).and_return 'true'
 
-          cli.sync package_name
+          subject
 
           expect(File.symlink? tracked_path).to be true
           expect(File.readlink tracked_path).to eq(tracked_path_in_repo)
@@ -42,7 +44,7 @@ describe 'kiip', type: :integration do
 
     context '(when source is already the correct symlink)' do
       it 'does nothing' do
-        cli.sync package_name
+        subject
 
         expect(File.symlink? tracked_path).to be true
         expect(File.readlink tracked_path).to eq(tracked_path_in_repo)
@@ -73,14 +75,13 @@ describe 'kiip', type: :integration do
       end
 
       it 'creates a link at source to target' do
-        cli.sync package_name
+        subject
 
         expect(File.symlink? tracked_path).to be true
         expect(File.readlink tracked_path).to eq(tracked_path_in_repo)
       end
     end
   end
-
 
 
   describe 'rm PACKAGE' do
