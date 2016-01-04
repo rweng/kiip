@@ -39,11 +39,6 @@ module Kiip::Tasks
       end
     end
 
-    def restore
-      remove_source
-      copy_target_to_source
-    end
-
     private
 
     def cli
