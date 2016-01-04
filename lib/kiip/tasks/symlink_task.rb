@@ -52,7 +52,7 @@ module Kiip::Tasks
 
     def initialize!
       raise "source must exist to initalize: #{source}" unless File.exists? source
-      raise "source must not be a symlink: #{source}" if File.symlink? source
+      return if File.symlink?(source) and not cli.agree("source is a symlink: #{source}. Continue?")
 
       move_source_to_target
       create_symlink_from_source_to_target
