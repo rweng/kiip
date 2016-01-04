@@ -12,8 +12,6 @@ describe 'kiip', type: :integration do
     File.open(tracked_path, 'w') { |f| f.write 'some content' }
     ENV['KIIP_REPO'] = repo_path
     Kiip::Repository.get_instance.create!
-
-    cli.track package_name, tracked_path
   end
 
   after do
@@ -21,6 +19,10 @@ describe 'kiip', type: :integration do
   end
 
   describe 'list' do
+    before do
+      cli.track package_name, tracked_path
+    end
+
     subject { cli.list }
 
     it 'prints out the packages with files and status' do
@@ -34,6 +36,10 @@ track:
   end
 
   describe 'unlink PACKAGE' do
+    before do
+      cli.track package_name, tracked_path
+    end
+
     subject { cli.unlink package_name }
 
     it 'removes the links' do
@@ -45,6 +51,10 @@ track:
   end
 
   describe 'restore PACKAGE' do
+    before do
+      cli.track package_name, tracked_path
+    end
+
     subject { cli.restore package_name }
 
     it 'replaces the links with the actual content' do
@@ -57,6 +67,10 @@ track:
   end
 
   describe 'link PACKAGE' do
+    before do
+      cli.track package_name, tracked_path
+    end
+
     subject { cli.link package_name }
 
     shared_examples 'it asks the user to replace it' do
@@ -130,6 +144,10 @@ track:
 
 
   describe 'rm PACKAGE' do
+    before do
+      cli.track package_name, tracked_path
+    end
+
     it 'replaces the source with the target' do
       cli.rm package_name
 
