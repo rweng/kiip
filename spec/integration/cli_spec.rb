@@ -67,7 +67,7 @@ track:
       end
 
       context '(when users says yes)' do
-        it 'replaces the files through a symlink' do
+        it 'replaces the file/folder through a symlink' do
           expect_any_instance_of(HighLine).to receive(:agree).and_return 'true'
 
           subject
@@ -100,6 +100,15 @@ track:
       before do
         FileUtils.rm tracked_path
         FileUtils.touch tracked_path
+      end
+
+      include_examples 'it asks the user to replace it'
+    end
+
+    context '(when source is a folder)' do
+      before do
+        FileUtils.rm tracked_path
+        FileUtils.mkdir tracked_path
       end
 
       include_examples 'it asks the user to replace it'

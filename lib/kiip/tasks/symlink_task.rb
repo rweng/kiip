@@ -21,6 +21,7 @@ module Kiip::Tasks
     # actually execute the task
     def exec!
       return initialize! unless File.exists? target
+
       if File.symlink? source
         return if File.readlink(source) == target
 
@@ -44,6 +45,7 @@ module Kiip::Tasks
     end
 
     private
+
     def cli
       HighLine.new
     end
@@ -61,10 +63,7 @@ module Kiip::Tasks
     end
 
     def remove_source
-      # only force on real directories
-      do_force = !File.symlink?(source) and File.directory?(source)
-
-      FileUtils.rm(source, verbose: is_verbose, noop: is_dry, force: do_force)
+      FileUtils.rm_r(source, verbose: is_verbose, noop: is_dry)
     end
 
     def move_source_to_target
