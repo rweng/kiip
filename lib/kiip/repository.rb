@@ -24,24 +24,27 @@ module Kiip
     end
 
     def unlink *package_names
+      ensure_existance!
       package_names.each do |name|
         get_package(name).unlink
       end
     end
 
     def restore *package_names
+      ensure_existance!
       package_names.each do |name|
         get_package(name).restore
       end
     end
 
     def sync! *names
+      ensure_existance!
       names = package_names if names.empty?
       names.each { |name| get_package(name).sync! }
     end
 
     def track package_name, path
-      return unless ensure_existance
+      ensure_existance!
       package = get_package(package_name)
       package.create! unless package.exists?
       package.track(path)
@@ -49,6 +52,7 @@ module Kiip
 
     # @return [String] multi-line string with content of the repository
     def print_content
+      ensure_existance!
       StringIO.open do |result|
         packages.each do |package|
           result.puts package.name + ':'
@@ -77,6 +81,7 @@ module Kiip
     end
 
     def packages
+      ensure_existance!
       package_names.map do |package_name|
         get_package(package_name)
       end
@@ -88,23 +93,28 @@ module Kiip
     end
 
     def rm *package_names
+      ensure_existance!
       package_names.each do |package_name|
         get_package(package_name).rm
       end
     end
 
     private
+    
     # asks user to create repository if it doesn't exist
     #
+    # @raise [IllegalStateError] if the repository doesn't exist
     # @return [boolean] true if repo exists now
-    def ensure_existance
-      return true if exists?
-
-      if HighLine.new.agree("Repository #{path} does not exist. Want me to create it? (yes/no)")
+    def ensure_existance!
+      if not exists? and cli.agree("Repository #{path} does not exist. Want me to create it? (yes/no)")
         create!
       end
 
       exists?
+    end
+
+    def cli
+      @cli ||= HighLine.new
     end
 
     def get_package(package_name)
