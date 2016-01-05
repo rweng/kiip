@@ -3,5 +3,10 @@
 $LOAD_PATH.unshift File.expand_path('../lib', __dir__)
 
 require 'kiip'
-
-Kiip::Cli.start(ARGV)
+begin
+  Kiip::Cli.start(ARGV)
+rescue StandardError => e
+  require 'highline'
+  HighLine.color_scheme = HighLine::SampleColorScheme.new
+  HighLine.new.say "<%= color('#{e.message}', :error) %>"
+end
