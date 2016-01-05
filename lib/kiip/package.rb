@@ -16,13 +16,18 @@ module Kiip
     property :name, required: true, coerce: String
     property :repository, required: true
 
-    def restore
-      unlink
-      content.each do |encoded_orginal_path|
-        decoded_original_path = self.class.decode encoded_orginal_path
-        FileUtils.cp_r(File.join(path, encoded_orginal_path), decoded_original_path,
-                       verbose: repository.is_verbose, noop: repository.is_dry)
+    def entries
+      content.map do |encoded_original_path|
+        Entry.new(
+            source: self.class.decode(encoded_original_path),
+            target: File.join(path, encoded_original_path),
+            package: self
+        )
       end
+    end
+
+    def restore
+      entries.each &:restore
     end
 
     # removes the links to the package content

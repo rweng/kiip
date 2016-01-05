@@ -11,6 +11,7 @@ module Kiip
   autoload :Repository, 'kiip/repository'
   autoload :Errors, 'kiip/errors'
   autoload :Package, 'kiip/package'
+  autoload :Entry, 'kiip/entry'
 
   module Tasks
     autoload :SymlinkTask, 'kiip/tasks/symlink_task'

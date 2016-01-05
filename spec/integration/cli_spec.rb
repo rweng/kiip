@@ -53,6 +53,7 @@ track:
   describe 'restore PACKAGE' do
     before do
       cli.track package_name, tracked_path
+      expect_any_instance_of(HighLine).to receive(:agree).and_return true
     end
 
     subject { cli.restore package_name }
