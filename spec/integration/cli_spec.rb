@@ -6,7 +6,7 @@ describe 'kiip', type: :integration do
   let(:tracked_path) { File.join(test_dir, 'tracked_file') }
   let(:package_name) { 'track' }
   let(:repo_path) { File.join(test_dir, 'repo') }
-  let(:tracked_path_in_repo) { File.join(repo_path, package_name, Kiip::Repository::Package.encode(tracked_path)) }
+  let(:tracked_path_in_repo) { File.join(repo_path, package_name, Kiip::Package.encode(tracked_path)) }
 
   before do
     File.open(tracked_path, 'w') { |f| f.write 'some content' }

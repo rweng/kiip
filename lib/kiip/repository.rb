@@ -2,7 +2,6 @@ require "pathname"
 
 module Kiip
   class Repository < Hashie::Dash
-    autoload :Package, 'kiip/repository/package'
     ID_FILE_NAME = '.kiip_repository'
 
     def self.get_instance(**options)
@@ -57,7 +56,7 @@ module Kiip
         packages.each do |package|
           result.puts package.name + ':'
           package.content.each do |content|
-            decoded_path_original = Kiip::Repository::Package.decode(content)
+            decoded_path_original = Kiip::Package.decode(content)
             decoded_path_expanded = File.expand_path decoded_path_original
 
             if File.symlink?(decoded_path_expanded)
@@ -100,7 +99,7 @@ module Kiip
     end
 
     private
-    
+
     # asks user to create repository if it doesn't exist
     #
     # @raise [IllegalStateError] if the repository doesn't exist

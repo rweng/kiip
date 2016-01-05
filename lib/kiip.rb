@@ -10,6 +10,7 @@ module Kiip
   autoload :Syncer, 'kiip/syncer'
   autoload :Repository, 'kiip/repository'
   autoload :Errors, 'kiip/errors'
+  autoload :Package, 'kiip/package'
 
   module Tasks
     autoload :SymlinkTask, 'kiip/tasks/symlink_task'

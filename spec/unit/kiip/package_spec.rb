@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Kiip::Repository::Package, type: :unit do
+describe Kiip::Package, type: :unit do
   let(:repository) { Kiip::Repository.new path: '/path/to/repo' }
   let(:package) { described_class.new name: 'ssh', repository: repository }
   let(:task_double) { double('task', exec!: nil) }
