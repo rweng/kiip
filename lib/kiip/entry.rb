@@ -8,7 +8,7 @@ module Kiip
     def restore
       # if file exists, remove or return
       if File.exist?(expanded_source)
-        cli.agree("#{source} exists. Remove it?") ? remove_source : return
+        File.readlink(expanded_source) == target || cli.agree("#{source} exists. Remove it?") ? remove_source : return
       end
 
       FileUtils.copy_entry(target, expanded_source, **file_options)
