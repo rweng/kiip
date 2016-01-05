@@ -6,9 +6,11 @@ module Kiip
 
     # restores the entry to it's original place
     def restore
+      remove_source if correct_link?
+
       # if file exists, remove or return
       if File.exist?(expanded_source)
-        File.readlink(expanded_source) == target || cli.agree("#{source} exists. Remove it?") ? remove_source : return
+        cli.agree("#{source} exists. Remove it?") ? remove_source : return
       end
 
       FileUtils.copy_entry(target, expanded_source, **file_options)
@@ -21,12 +23,16 @@ module Kiip
         return
       end
 
-      if (File.symlink?(expanded_source) and File.readlink(expanded_source) == target) or cli.agree("#{source} is not a symlink to #{target}. Still remove it?")
+      if correct_link? or cli.agree("#{source} is not a symlink to #{target}. Still remove it?")
         FileUtils.remove_entry(expanded_source, **file_options)
       end
     end
 
     private
+
+    def correct_link?
+      File.symlink?(expanded_source) and File.readlink(expanded_source) == target
+    end
 
     def cli
       @cli || HighLine.new

@@ -4,12 +4,14 @@ describe 'kiip', type: :integration do
   let(:test_dir) { Dir.mktmpdir }
   let(:cli) { Kiip::Cli.new }
   let(:tracked_path) { File.join(test_dir, 'tracked_file') }
+  let(:tracked_directory_path) { File.join(test_dir, 'tracked_directory') }
   let(:package_name) { 'track' }
   let(:repo_path) { File.join(test_dir, 'repo') }
   let(:tracked_path_in_repo) { File.join(repo_path, package_name, Kiip::Package.encode(tracked_path)) }
 
   before do
     File.open(tracked_path, 'w') { |f| f.write 'some content' }
+    FileUtils.mkdir(tracked_directory_path)
     ENV['KIIP_REPO'] = repo_path
     Kiip::Repository.get_instance.create!
   end
@@ -53,6 +55,7 @@ track:
   describe 'restore PACKAGE' do
     before do
       cli.track package_name, tracked_path
+      cli.track package_name, tracked_directory_path
     end
 
     subject { cli.restore package_name }
@@ -63,6 +66,17 @@ track:
       expect(File.symlink? tracked_path).to be false
       expect(File.exist? tracked_path).to be true
       expect(File.read tracked_path).to eq(File.read tracked_path_in_repo)
+    end
+
+    context '(when entry is a directory)' do
+      it 'asks if the directory should be removed' do
+        FileUtils.remove_entry(tracked_directory_path)
+        FileUtils.mkdir(tracked_directory_path)
+
+        expect_any_instance_of(HighLine).to receive(:agree).and_return true
+
+        subject
+      end
     end
   end
 
