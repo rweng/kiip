@@ -55,23 +55,8 @@ module Kiip
       StringIO.open do |result|
         packages.each do |package|
           result.puts package.name + ':'
-          package.content.each do |content|
-            decoded_path_original = Kiip::Package.decode(content)
-            decoded_path_expanded = File.expand_path decoded_path_original
-
-            if File.symlink?(decoded_path_expanded)
-              status = File.readlink(decoded_path_expanded) == File.join(package.path, content) ? 'linked' : 'symlink'
-            elsif File.directory?(decoded_path_expanded)
-              status = 'directory'
-            elsif File.file? decoded_path_expanded
-              status = 'file'
-            elsif not File.exist? decoded_path_expanded
-              status = 'not existant'
-            else
-              raise 'unknown status'
-            end
-
-            result.puts "  #{decoded_path_original} | #{status}"
+          package.entries.each do |entry|
+            result.puts "  #{entry.source} | #{entry.status}"
           end
         end
 

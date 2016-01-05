@@ -28,6 +28,16 @@ module Kiip
       end
     end
 
+    def status
+      return :linked if correct_link?
+      return :symlink if File.symlink?(expanded_source)
+      return :directory if File.directory?(expanded_source)
+      return :file if File.file?(expanded_source)
+      return :not_existent unless File.exist?(expanded_source)
+
+      raise 'unknown status'
+    end
+
     private
 
     def correct_link?
