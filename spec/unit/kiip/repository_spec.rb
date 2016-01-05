@@ -12,6 +12,18 @@ describe Kiip::Repository do
     allow(repository).to receive(:exists?).and_return true
   end
 
+  describe '.get_instance' do
+    it 'throws an error when KIIP_REPO is not set' do
+      ENV.delete 'KIIP_REPO'
+      expect{described_class.get_instance}.to raise_error RuntimeError
+    end
+
+    it 'expands variables' do
+      ENV['TESTVAR'] = '/tmp'
+      ENV['KIIP_REPO'] = '$TESTVAR/repo'
+      expect(described_class.get_instance.path).to eq '/tmp/repo'
+    end
+  end
 
   describe '#sync! ssh' do
     context '(when no name is given)' do

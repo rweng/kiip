@@ -7,7 +7,7 @@ module Kiip
     def self.get_instance(**options)
       path = ENV['KIIP_REPO'] || raise('KIIP_REPO environment variable not defined')
 
-      options[:path] = path
+      options[:path] = %x(echo #{path}).rstrip
 
       return self.new(**options)
     end
