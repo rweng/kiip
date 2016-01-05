@@ -14,7 +14,7 @@ describe Kiip::Package, type: :unit do
     subject { package.sync! }
 
     it 'creates a sync task' do
-      expect(Kiip::Tasks::SymlinkTask).to receive(:new).with(name: 'task-name', source: '~/.ssh', target: target).and_return(task_double)
+      expect(Kiip::Tasks::SymlinkTask).to receive(:new).with(name: 'task-name', source: '~/.ssh', target: target, is_dry: false, is_verbose: false).and_return(task_double)
 
       subject
 
@@ -26,12 +26,12 @@ describe Kiip::Package, type: :unit do
     subject { package.track '~/.ssh' }
 
     before do
-      allow(Kiip::Tasks::SymlinkTask).to receive(:new).with(name: 'task-name', source: '~/.ssh', target: target).and_return task_double
+      allow(Kiip::Tasks::SymlinkTask).to receive(:new).with(name: 'task-name', source: '~/.ssh', target: target, is_dry: false, is_verbose: false).and_return task_double
     end
 
     it 'executes a symlink task' do
       subject
-      expect(Kiip::Tasks::SymlinkTask).to have_received(:new).with(name: 'task-name', source: '~/.ssh', target: target)
+      expect(Kiip::Tasks::SymlinkTask).to have_received(:new).with(name: 'task-name', source: '~/.ssh', target: target, is_dry: false, is_verbose: false)
       expect(task_double).to have_received :exec!
     end
   end

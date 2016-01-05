@@ -1,7 +1,7 @@
 module Kiip
   class Cli < Thor
-    class_option :dry, :type => :boolean, default: false
-    class_option :verbose, :type => :boolean, default: false
+    class_option :dry, :type => :boolean, default: false, aliases: '-d'
+    class_option :verbose, :type => :boolean, default: false, aliases: '-v'
 
     desc 'track PACKAGE_NAME PATH', 'tracks the file or folder under PATH with the package name NAME. wrap PATH in quotes to ensure ~ and env variables are kept.'
     def track package_name, file_or_folder

@@ -23,7 +23,10 @@ module Kiip::Tasks
       return initialize! unless File.exists? target
 
       if File.symlink? source
-        return if File.readlink(source) == target
+        if File.readlink(source) == target
+          puts "#{source} already linked" if is_verbose
+          return
+        end
 
         if cli.agree "#{source} already exists, linking to #{File.readlink(source)}. Replace?"
           remove_source

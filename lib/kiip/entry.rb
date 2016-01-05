@@ -13,7 +13,8 @@ module Kiip
         cli.agree("#{source} exists. Remove it?") ? remove_source : return
       end
 
-      FileUtils.copy_entry(target, expanded_source, **file_options)
+      puts "copy #{target} to #{source}" if verbose?
+      FileUtils.copy_entry(target, expanded_source) unless dry?
     end
 
     # removes the source. If source is not a link to target, it asks the users.
@@ -24,7 +25,8 @@ module Kiip
       end
 
       if correct_link? or cli.agree("#{source} is not a symlink to #{target}. Still remove it?")
-        FileUtils.remove_entry(expanded_source, **file_options)
+        puts "removing #{source}" if file_options[:verbose]
+        FileUtils.remove_entry(expanded_source, **file_options) unless file_options[:noop]
       end
     end
 
@@ -48,12 +50,20 @@ module Kiip
       @cli || HighLine.new
     end
 
+    def verbose?
+      package.repository.is_verbose
+    end
+
+    def dry?
+      package.repository.is_dry
+    end
+
     def expanded_source
       File.expand_path(source)
     end
 
     def file_options
-      {verbose: package.repository.is_verbose, noop: package.repository.is_dry}
+      {verbose: verbose?, noop: dry?}
     end
 
     # asks the user if source should be removed and removes it

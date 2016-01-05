@@ -45,14 +45,14 @@ module Kiip
 
       return if repository.is_dry
 
-      task = Tasks::SymlinkTask.new(name: 'task-name', source: tracking_path, target: File.join(path, escaped_tracking_path))
+      task = Tasks::SymlinkTask.new(name: 'task-name', source: tracking_path, target: File.join(path, escaped_tracking_path), is_verbose: repository.is_verbose, is_dry: repository.is_dry)
       task.exec!
     end
 
     def sync!
       content.each do |subpath|
         source = self.class.decode subpath
-        task = Tasks::SymlinkTask.new(name: 'task-name', source: source, target: File.join(path, subpath))
+        task = Tasks::SymlinkTask.new(name: 'task-name', source: source, target: File.join(path, subpath), is_verbose: repository.is_verbose, is_dry: repository.is_dry)
         task.exec!
       end
     end
