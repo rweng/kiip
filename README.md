@@ -8,7 +8,8 @@ Kiip, just another dotfiles tool to move your actual files and folders to a repo
 ## Terminology
 
 - `Repository`: the place where your packages are stored, e.g. `~/Dropbox/kiip`
-- `Package`: The file or folder in `PATH_TO_CASTLE/home/PACKAGE_NAME`
+- `Package`: The folder `PATH_TO_REPOSITORY/PACKAGE_NAME`. It can contain multiple entries.
+- `Entry`: The file/folder/symlink **in** `PATH_TO_REPOSITORY/PACKAGE_NAME`. It is the real file/folder, with an base64 encoded name of the original path.
 
 ## Installation
 
@@ -18,19 +19,45 @@ Kiip, just another dotfiles tool to move your actual files and folders to a repo
 
     Commands:
       kiip help [COMMAND]           # Describe available commands or one specific command
-      kiip list                     # lists all packages
-      kiip rm NAME                  # removes package with name NAME, see: kiip help rm
-      kiip sync PACKAGE_NAME        # recreates the source of the package (via symlink, copy, etc)
-      kiip track PACKAGE_NAME PATH  # tracks the file or folder under PATH with the package name NAME....
+      kiip link PACKAGE_NAME        # ensures links to the package files exist
+      kiip list                     # lists all packages with content
+      kiip restore PACKAGE_NAME     # restores the content of the package to the original places
+      kiip rm NAME                  # removes package with name NAME from the repository
+      kiip track PACKAGE_NAME PATH  # tracks the file or folder under PATH with the package name NAM...
+      kiip unlink PACKAGE_NAME      # removes the links to the package files
     
     Options:
-      [--dry], [--no-dry]
+      -d, [--dry], [--no-dry]
+      -v, [--verbose], [--no-verbose]
       
     Examples:
-        kiip track ssh ~/.ssh 
-        kiip list 
+        $ kiip track -v ssh ~/.ssh
+        mv /Users/rowe/.ssh /Users/rowe/Sync/home/kiip/ssh/fi8uc3No
+        ln -s /Users/rowe/Sync/home/kiip/ssh/fi8uc3No /Users/rowe/.ssh
+         
+        $ kiip list 
           ssh:
-            ~/.ssh
+            ~/.ssh | linked
+            
+        $ kiip unlink -v ssh
+        removing ~/.ssh
+        
+        $ kiip list
+            ssh:
+              ~/.ssh | not_existent
+      
+        $ kiip restore -v ssh
+        copy /Users/rowe/Sync/home/kiip/ssh/fi8uc3No to ~/.ssh
+              
+        $ kiip list
+            ssh:
+              ~/.ssh | directory
+              
+        $ kiip rm -v ssh
+        rm -r /Users/rowe/Sync/home/kiip/ssh
+        
+        $ kiip list
+            
         
 
 ## Development
