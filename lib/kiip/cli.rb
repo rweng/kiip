@@ -33,6 +33,11 @@ module Kiip
       repository.rm package_name
     end
 
+    desc 'version', 'displays kiip version'
+    def version
+      puts Kiip::VERSION
+    end
+
     private
     def repository
       Kiip::Repository.get_instance(is_dry: options[:dry], is_verbose: options[:verbose])
