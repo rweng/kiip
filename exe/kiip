@@ -8,5 +8,5 @@ begin
 rescue StandardError => e
   require 'highline'
   HighLine.color_scheme = HighLine::SampleColorScheme.new
-  HighLine.new.say "<%= color('#{e.message}', :error) %>"
+  HighLine.new.say HighLine.color(e.message, :error)
 end
