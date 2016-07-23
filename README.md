@@ -1,4 +1,4 @@
-# Kiip
+# Kiip (DEPRECATED)
 
 [![Travis Status](https://travis-ci.org/rweng/kiip.svg)](https://travis-ci.org/rweng/kiip)
 [![codecov.io](http://codecov.io/github/rweng/kiip/coverage.svg?branch=master)](http://codecov.io/github/rweng/kiip?branch=master)
